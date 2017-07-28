@@ -1,2 +1,13 @@
 *.class
 *.log
+/bin/
+target/
+project/
+
+# eclipse files
+.cache-main
+.classpath
+.project
+.settings/
+
+

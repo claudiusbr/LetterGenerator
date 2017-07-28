@@ -1,2 +1,2 @@
 # LetterGenerator
-a program to generate individually addressed letters
+A program to generate individually addressed letters
