@@ -2,10 +2,8 @@ package renderer
 
 import scala.swing.MainFrame
 
-case class InteractionMediator() {
+case class InteractionMediator(ui: MainFrame) {
   def runInterface(): Unit = {
-    val ui: MainFrame = new Wizard
     ui.visible = true
   }
-
 }
