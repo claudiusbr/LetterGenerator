@@ -12,12 +12,12 @@ class IntMedTester extends FunSpec
   
   val mockFrame: MainFrame = mock[MainFrame]
   
-  val im = InteractionMediator(mockFrame)
+  val im = InteractionMediator()
 
   describe("the runInterface method") {
     it("should run the GUI") {
       When("it is called")
-      im.runInterface()
+      im.runInterface(mockFrame)
       
       Then("the frame should become visible")
       Mockito.verify(mockFrame, Mockito.times(1)).visible_=(true)
