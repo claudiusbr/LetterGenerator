@@ -4,29 +4,82 @@ import scala.swing._
 import java.io.File
 
 /**
- * Inspired by http://otfried.org/scala/gui.html
+ * the main frame. Responsible for laying out the elements
+ * @param medium an InteractionMediator object
  */
-class Wizard extends MainFrame {
+class Wizard(medium: InteractionMediator) extends MainFrame {
   title = "Letter Maker Wizard" 
   preferredSize = new Dimension(640,320)
-  val msg = new Label("Please choose the csv file with the"
-    + " details which will go on the letters")
+  val TextWidth = 56
   
-  val path = new TextField {columns = 56}
+  // for making the buttons and labels
+  val elementMkr = ElementMaker()
   
-  restrictHeight(path)
+  // for opening files and directories
+  private val fOpener = new FileChooser(new File("."))
+  private val dOpener = new FileChooser(new File("."))
+  dOpener.fileSelectionMode = FileChooser.SelectionMode.DirectoriesOnly
+
+  
+  // source of letter header details
+  private val (dtLbl, dtTxt, dtBtn) = 
+    elementMkr.mkOpenFileElmts("Please choose the file with the"
+      + " details which will go on the letters", fOpener, TextWidth)
+  
+  // source of letter template
+  private val (tpltLbl, tpltTxt, tpltBtn) = 
+    elementMkr.mkOpenFileElmts("Please choose the file with the "
+      + " template for the letters", fOpener, TextWidth)
+
+  // destination folder
+  private val (destLbl, destTxt, destBtn) = 
+    elementMkr.mkOpenFileElmts("Please choose a destination " 
+      + "folder for the letters", dOpener, TextWidth)
+      
+  private[renderer] val message: Label = elementMkr.label("Ready")
+  
+  setMaxHeight(dtTxt)
+  setMaxHeight(tpltTxt)
+  setMaxHeight(destTxt)
   
   contents = new BoxPanel(Orientation.Vertical) {
     contents += new BoxPanel(Orientation.Vertical) {
-      contents += msg
+      contents += dtLbl
       contents += Swing.VStrut(5)
       contents += new BoxPanel(Orientation.Horizontal) {
-        contents += path
-        contents+= Swing.HStrut(1)
-        contents += Button("Open") {
-          path.text = getFile(new FileChooser(new File(".")))
-        }
+        contents += dtTxt
+        contents += Swing.HStrut(3)
+        contents += dtBtn
       }
+    }
+
+    contents += Swing.VStrut(30)
+    contents += new BoxPanel(Orientation.Vertical) {
+     contents += tpltLbl
+     contents += Swing.VStrut(5)
+     contents += new BoxPanel(Orientation.Horizontal) {
+       contents += tpltTxt
+       contents += Swing.HStrut(3)
+       contents += tpltBtn
+     }
+    }
+
+    contents += Swing.VStrut(30)
+
+    contents += new BoxPanel(Orientation.Vertical) {
+     contents += destLbl
+     contents += Swing.VStrut(5)
+     contents += new BoxPanel(Orientation.Horizontal) {
+       contents += destTxt
+       contents += Swing.HStrut(3)
+       contents += destBtn
+     }
+    }
+    
+    contents += new BoxPanel(Orientation.Horizontal) {
+      contents += elementMkr.button("Generate Letters", submit(medium))
+      contents += Swing.HStrut(6)
+      contents += message
       contents += Swing.VGlue
     }
 
@@ -36,15 +89,20 @@ class Wizard extends MainFrame {
   }
 
   
-  def restrictHeight(s: Component) {
+  /**
+   * Inspired by http://otfried.org/scala/gui.html
+   */
+  def setMaxHeight(s: Component) {
     s.maximumSize = new Dimension(Short.MaxValue, s.preferredSize.height)
   }
   
-  def getFile(opener: FileChooser): String = {
-    if (opener.showOpenDialog(null) == FileChooser.Result.Approve)
-      opener.selectedFile.getAbsolutePath
-    else ""
+  def submit(medium: InteractionMediator): Unit = {
+    medium.generateLetters(this)
   }
+  
+  def detailsFile: String = dtTxt.text
+  def templateFile: String = tpltTxt.text
+  def destinationFolder: String = destTxt.text
 }
 
 
