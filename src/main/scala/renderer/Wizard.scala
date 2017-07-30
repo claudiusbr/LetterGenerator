@@ -23,8 +23,8 @@ class Wizard extends MainFrame {
       contents += new BoxPanel(Orientation.Horizontal) {
         contents += path
         contents+= Swing.HStrut(1)
-        contents += new Button("Open") {
-          path.text = getFile()
+        contents += Button("Open") {
+          path.text = getFile(new FileChooser(new File(".")))
         }
       }
       contents += Swing.VGlue
@@ -40,8 +40,7 @@ class Wizard extends MainFrame {
     s.maximumSize = new Dimension(Short.MaxValue, s.preferredSize.height)
   }
   
-  def getFile(): String = {
-    val opener = new FileChooser(new File("."))
+  def getFile(opener: FileChooser): String = {
     if (opener.showOpenDialog(null) == FileChooser.Result.Approve)
       opener.selectedFile.getAbsolutePath
     else ""
