@@ -1,8 +1,9 @@
 package renderer
 
-import input._
+import formatter._
 
 import scala.swing.MainFrame
+import formatter.PathValidator
 
 case class InteractionMediator() {
   def runInterface(ui: MainFrame): Unit = {
