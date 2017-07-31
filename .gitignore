@@ -1,6 +1,7 @@
 *.class
 *.log
 /bin/
+*.docx
 target/
 project/*
 !project/build.properties
@@ -13,5 +14,4 @@ project/*
 .classpath
 .project
 .settings/
-
 
