@@ -9,7 +9,7 @@ import java.io.File
  */
 class Wizard(medium: InteractionMediator) extends MainFrame {
   title = "Letter Maker Wizard" 
-  preferredSize = new Dimension(640,320)
+  preferredSize = new Dimension(695,320)
   val TextWidth = 56
   
   // for making the buttons and labels
@@ -97,7 +97,7 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
   }
   
   def submit(medium: InteractionMediator): Unit = {
-    medium.generateLetters(this)
+    medium.submit(this)
   }
   
   def detailsFile: String = dtTxt.text
