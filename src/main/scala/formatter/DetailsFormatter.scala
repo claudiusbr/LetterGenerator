@@ -8,7 +8,8 @@ class DetailsFormatter(input: Input) {
 
   val details: Map[String,Array[String]] = {
 
-    val it: Iterator[String] = input.getContents().toIterator
+    /* implicitly converted to Iterator */
+    val it: Iterator[String] = input.getContents()
 
     val det: mHashMap[String,ArrayBuffer[String]] = mHashMap()
 
@@ -40,5 +41,8 @@ class DetailsFormatter(input: Input) {
       case None => formatted
     }
   }
+  
+  implicit def fromAnyToIterator(par: Any): Iterator[String] = 
+    par.asInstanceOf[Iterator[String]]
 
 }

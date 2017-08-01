@@ -1,22 +1,18 @@
 package formatter
 
 trait Input {
-  def getContents(): Iterator[String]
-  def getFile(): Any
+  def getContents(): Any
 }
 
 class CsvInput(fileName: String) extends Input {
-  override def getContents(): Iterator[String] = 
+  override def getContents(): Any = 
     io.Source.fromFile(fileName).getLines
 
-  override def getFile(): Any = getContents()
 }
 
 class DocxInput(fileName: String) extends Input {
-  import org.docx4j.openpackaging.packages.{WordprocessingMLPackage => WordPack}
-  
+  import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 
-
-  override def getContents(): Iterator[String] = ???
-  override def getFile(): Any = ???
+  override def getContents(): Any = 
+    WordprocessingMLPackage.load(new java.io.File(fileName))
 }
