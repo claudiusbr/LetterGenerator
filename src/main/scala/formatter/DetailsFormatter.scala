@@ -1,32 +1,38 @@
 package formatter
 
-import scala.collection.mutable.{HashMap => mHashMap,ArrayBuffer}
-import scala.collection.immutable.HashMap
+import scala.language.implicitConversions
+
+import java.util.{HashMap => JHashMap}
+
+import scala.collection.mutable.ArrayBuffer
 import scala.util.matching.Regex
 
-class DetailsFormatter(input: Input) {
+case class DetailsFormatter(input: Input) {
+  
+  private val Separator: String = ";SEPARATOR;"
 
-  val details: Map[String,Array[String]] = {
+  val details: Seq[JHashMap[String,String]] = {
 
-    /* implicitly converted to Iterator */
     val it: Iterator[String] = input.getContents()
 
-    val det: mHashMap[String,ArrayBuffer[String]] = mHashMap()
-
     val headers: Array[String] = it.next.split(",")
-
-    for (element <- headers) {
-      det(element) = ArrayBuffer[String]()
-    }
+    
+    val det: ArrayBuffer[JHashMap[String,String]] = ArrayBuffer()
 
     // fill up columns with values from input
     while (it.hasNext) {
       val tuple: Array[String] = replCommas(it.next).split(",")
 
-      for (i <- tuple.indices) det(headers(i)) += tuple(i)
+      val jmap = new JHashMap[String,String]()
+
+      tuple.indices.foreach(i => jmap.put(headers(i),tuple(i)
+          .replaceAll(s"$Separator",",")
+          .replaceAll("\"","")))
+      
+      det += jmap
     }
 
-    det.map(e => (e._1, e._2.toArray)).toMap
+    det.toSeq
   }
   
   def replCommas(text: String): String = {
@@ -34,7 +40,7 @@ class DetailsFormatter(input: Input) {
     val commaInText: Regex = "(.*\".*),(.*\".*)".r
 
     // this is where the regular expression comes in
-    val formatted = commaInText.replaceAllIn(text, _ => s"$$1;$$2")
+    val formatted = commaInText.replaceAllIn(text, _ => s"$$1$Separator$$2")
 
     commaInText.findFirstIn(formatted) match {
       case Some(e) => replCommas(e)
