@@ -4,12 +4,23 @@ TODOs
 Make the text on the first label be dependent on input rather than hardcoded
 -----------------------------------------------------------------------------
 Currently the text on the label reads 'please choose the csv file'. This should
-not be hardcoded, but rather find the filetype depending on how input is being
+not be hard-coded, but rather find the file type depending on how input is being
 processed.
 
-Test if user input can take special characters
-----------------------------------------------
-Add some kind of validation to it to make sure it does.
+Input Validation
+----------------
+- Test if user input can take special characters
+- Protect against wrong file types being chosen (for input)
+
+
+Write tests
+-----------
+- for all methods
+
+Apply chain of responsibility
+-----------------------------
+- InteractionMediator is doing too much. See if it can be split into classes
+  which conform to the Chain Of Responsibility pattern, for example
 
 
 Fault tolerance?
