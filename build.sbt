@@ -7,7 +7,7 @@ lazy val root = (project in file(".")).
       scalaVersion := "2.12.3",
       version      := "0.1.0-SNAPSHOT"
     )),
-    name := "AgeLetters",
+    name := "LetterGenerator",
     scalacOptions ++= Seq("-feature","-unchecked","-deprecation"),
     libraryDependencies += scalaTest % Test,
     libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "2.0.0-M2",
