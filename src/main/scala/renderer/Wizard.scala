@@ -36,7 +36,9 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
     elementMkr.mkOpenFileElmts("Please choose a destination " 
       + "folder for the letters", dOpener, TextWidth)
       
-  private[renderer] val message: Label = elementMkr.label("Ready")
+  private val msg: Label = elementMkr.label("Ready")
+  
+  def message(text: String): Unit = msg.text = text
   
   setMaxHeight(dtTxt)
   setMaxHeight(tpltTxt)
@@ -77,9 +79,9 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
     }
     
     contents += new BoxPanel(Orientation.Horizontal) {
-      contents += elementMkr.button("Generate Letters", submit(medium))
+      contents += elementMkr.button("Generate Letters", submit())
       contents += Swing.HStrut(6)
-      contents += message
+      contents += msg
       contents += Swing.VGlue
     }
 
@@ -89,16 +91,10 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
   }
 
   
-  /**
-   * Inspired by http://otfried.org/scala/gui.html
-   */
-  def setMaxHeight(s: Component) {
-    s.maximumSize = new Dimension(Short.MaxValue, s.preferredSize.height)
-  }
+  def setMaxHeight(comp: Component) = 
+    comp.maximumSize = new Dimension(Short.MaxValue, comp.preferredSize.height)
   
-  def submit(medium: InteractionMediator): Unit = {
-    medium.submit(this)
-  }
+  def submit(): Unit = medium.submit() 
   
   def detailsFile: String = dtTxt.text
   def templateFile: String = tpltTxt.text

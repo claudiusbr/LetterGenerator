@@ -6,83 +6,92 @@ import org.docx4j.XmlUtils
 import org.docx4j.wml.Document
 import org.docx4j.jaxb.Context
 import org.docx4j.openpackaging.io.SaveToZipFile
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage  
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
 
 import scala.swing.MainFrame
-import formatter.PathValidator
 
 import java.util.{HashMap => JHashMap}
 
 case class InteractionMediator() {
-  def runInterface(ui: MainFrame): Unit = {
-    ui.visible = true
+  private var gui: Wizard = _ 
+  
+  def registerInterface(gui: MainFrame): Unit = this.gui = gui.asInstanceOf[Wizard]
+  
+  def runInterface(): Unit = gui.visible = true
+  
+  def messageUser(text: String): Unit = gui.message(text)
+  
+  def submit(): Unit = {
+    messageUser("Processing...")
+    validatePaths() 
   }
   
-  def submit(ui: MainFrame): Unit = {
-    val gui = ui.asInstanceOf[Wizard]
-    gui.message.text = "Processing..."
-    validatePaths(gui) 
-  }
-  
-  def validatePaths(gui: Wizard): Unit = {
-    val validator = PathValidator() 
+  def validatePaths(): Unit = {
+    val validator: Validator = PathValidator() 
 
-    if (validator.validate(gui.detailsFile)) {
-      if (validator.validate(gui.templateFile)) {
-        if(validator.validate(gui.destinationFolder)) {
-          loadInformation(gui)
-        } else {
-          gui.message.text = 
-            "Could not reach the destination folder."+
-            " Please check if it is correct, or report this issue."
-        }
-      } else {
-        gui.message.text = 
-          "Could not reach the template file."+
-          " Please check if it is correct, or report this issue."
+    val paths = List[(String,String)](
+      "details file" -> gui.detailsFile,
+      "template file" -> gui.templateFile,
+      "destination folder" -> gui.destinationFolder
+    )
+
+    def f(p: List[(String,String)]): Unit = p match {
+      case Nil => throw new IllegalArgumentException("argument p cannot be an empty list")
+
+      case z :: Nil => validator.validate(z._2) match {
+        case true => loadInformation()
+        case false => messageUser(s"Could not reach the ${z._1}. Please check if path is correct, or report this issue")
       }
-    } else {
-      gui.message.text = 
-        "Could not reach the details file." +
-        " Please check if it is correct, or report this issue."
+
+      case x :: xs => validator.validate(x._2) match {
+        case true => f(xs.tail)
+        case false => messageUser(s"Could not reach the ${x._1}. Please check if path is correct, or report this issue")
+      }
     }
   }
   
-  def loadInformation(gui: Wizard): Unit = {
-    val details: Seq[JHashMap[String,String]] = 
+  def loadInformation(): Unit = {
+    val details: Seq[Map[String,String]] = 
       new DetailsFormatter(CsvInput(gui.detailsFile)).details
 
-    generate(details,gui)
-  }
-  
-  def generate(details: Seq[JHashMap[String,String]], gui: Wizard): Unit = {
-
-    val docPack = TemplateFormatter(DocxInput(gui.templateFile)).template
-        
-    val template: MainDocumentPart = docPack.getMainDocumentPart
+    val docPack: WordprocessingMLPackage = 
+      TemplateFormatter(DocxInput(gui.templateFile)).template
 
     val destination = gui.destinationFolder
     
+    validateContent(details,docPack,destination)
+  }
+
+  def validateContent(details: Seq[Map[String,String]], 
+      docPack: WordprocessingMLPackage, destination: String): Unit = {
+
+    val detValidator: Validator = DetailsValidator()
+    generateLetters(details,docPack,destination)
+  }
+  
+  def generateLetters(details: Seq[Map[String,String]],
+      docPack: WordprocessingMLPackage, destination: String): Unit = {
+
+    import formatter.Converters.mapAsJavaMap
+    
+    val template: MainDocumentPart = docPack.getMainDocumentPart
+
     var counter = 0
 
-    for(map <- details) {
+    for(smap <- details) {
+      val map: JHashMap[String,String] = smap
 
       val jaxbElement = template.getJaxbElement
-
-      println(jaxbElement.toString())
-      
       val xml: String = XmlUtils.marshaltoString(jaxbElement, true)
-      
       val replaced: Object = XmlUtils.unmarshallFromTemplate(xml, map)
-      
       template.setJaxbElement(replaced.asInstanceOf[Document])
-      
       counter += 1
-
       new SaveToZipFile(docPack).save(s"$destination/Output$counter.docx")
-      
       template.setJaxbElement(jaxbElement)
     }
-    gui.message.text = "Done!"
+
+    messageUser("Done!")
+
   }
 }

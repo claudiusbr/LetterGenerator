@@ -1,6 +1,5 @@
 package renderer
 
-import scala.swing.MainFrame
 
 import org.scalatest.{FunSpec, GivenWhenThen}
 import org.mockito.Mockito.when
@@ -10,14 +9,15 @@ import org.scalatest.mockito.MockitoSugar
 class IntMedTester extends FunSpec 
   with GivenWhenThen with MockitoSugar{
   
-  val mockFrame: MainFrame = mock[MainFrame]
+  val mockFrame: Wizard = mock[Wizard]
   
   val im = InteractionMediator()
 
   describe("the runInterface method") {
     it("should run the GUI") {
       When("it is called")
-      im.runInterface(mockFrame)
+      im.registerInterface(mockFrame)
+      im.runInterface()
       
       Then("the frame should become visible")
       Mockito.verify(mockFrame, Mockito.times(1)).visible_=(true)
