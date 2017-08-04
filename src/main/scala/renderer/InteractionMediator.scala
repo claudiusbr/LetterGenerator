@@ -24,35 +24,37 @@ case class InteractionMediator() {
   
   def submit(): Unit = {
     messageUser("Processing...")
-    validatePaths() 
+    validatePaths(PathValidator() ) 
   }
   
-  def validatePaths(): Unit = {
-    val validator: Validator = PathValidator() 
-
+  def validatePaths(validator: Validator ): Unit = {
     val paths = List[(String,String)](
       "details file" -> gui.detailsFile,
       "template file" -> gui.templateFile,
       "destination folder" -> gui.destinationFolder
     )
+    
 
-    def f(p: List[(String,String)]): Unit = p match {
+    f[String](paths,validator,loadInformation())
+
+    def f[A](p: List[(String,A)], validator: Validator,
+        op:  => Unit): Unit = p match {
       case Nil => throw new IllegalArgumentException("argument p cannot be an empty list")
 
-      case z :: Nil => validator.validate(z._2) match {
+      case x :: Nil => validator.validate(x._2) match {
         case true => loadInformation()
-        case false => messageUser(s"Could not reach the ${z._1}. Please check if path is correct, or report this issue")
+        case false => messageUser(s"Could not reach the ${x._1}. Please check if path is correct, or report this issue")
       }
 
       case x :: xs => validator.validate(x._2) match {
-        case true => f(xs.tail)
+        case true => f(xs,validator,loadInformation())
         case false => messageUser(s"Could not reach the ${x._1}. Please check if path is correct, or report this issue")
       }
     }
   }
   
   def loadInformation(): Unit = {
-    val details: Seq[Map[String,String]] = 
+    val details: Seq[JHashMap[String,String]] = 
       new DetailsFormatter(CsvInput(gui.detailsFile)).details
 
     val docPack: WordprocessingMLPackage = 
@@ -63,23 +65,22 @@ case class InteractionMediator() {
     validateContent(details,docPack,destination)
   }
 
-  def validateContent(details: Seq[Map[String,String]], 
+  def validateContent(details: Seq[JHashMap[String,String]], 
       docPack: WordprocessingMLPackage, destination: String): Unit = {
 
     generateLetters(details,docPack,destination)
   }
   
-  def generateLetters(details: Seq[Map[String,String]],
+  def generateLetters(details: Seq[JHashMap[String,String]],
       docPack: WordprocessingMLPackage, destination: String): Unit = {
 
-    import formatter.Converters.mapAsJavaMap
+    import scala.collection.JavaConverters._
     
     val template: MainDocumentPart = docPack.getMainDocumentPart
 
     var counter = 0
 
-    for(smap <- details) {
-      val map: JHashMap[String,String] = smap
+    for(map <- details) {
 
       val jaxbElement = template.getJaxbElement
       val xml: String = XmlUtils.marshaltoString(jaxbElement, true)
