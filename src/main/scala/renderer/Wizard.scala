@@ -2,6 +2,7 @@ package renderer
 
 import scala.swing._
 import java.io.File
+import javax.swing.filechooser.FileNameExtensionFilter
 
 /**
  * the main frame. Responsible for laying out the elements
@@ -16,25 +17,28 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
   val elementMkr = ElementMaker()
   
   // for opening files and directories
-  private val fOpener = new FileChooser(new File("."))
-  private val dOpener = new FileChooser(new File("."))
-  dOpener.fileSelectionMode = FileChooser.SelectionMode.DirectoriesOnly
+  private val csvOpener = new FileChooser(new File("."))
+  csvOpener.fileFilter = (new FileNameExtensionFilter("CSV (Comma Separated Values)","csv"))
+  private val docxOpener = new FileChooser(new File("."))
+  docxOpener.fileFilter = (new FileNameExtensionFilter("Word Document","docx"))
+  private val dirOpener = new FileChooser(new File("."))
+  dirOpener.fileSelectionMode = FileChooser.SelectionMode.DirectoriesOnly
 
   
   // source of letter header details
   private val (dtLbl, dtTxt, dtBtn) = 
     elementMkr.mkOpenFileElmts("Please choose the file with the"
-      + " details which will go on the letters", fOpener, TextWidth)
+      + " details which will go on the letters", csvOpener, TextWidth)
   
   // source of letter template
   private val (tpltLbl, tpltTxt, tpltBtn) = 
     elementMkr.mkOpenFileElmts("Please choose the file with the "
-      + " template for the letters", fOpener, TextWidth)
+      + " template for the letters", docxOpener, TextWidth)
 
   // destination folder
   private val (destLbl, destTxt, destBtn) = 
     elementMkr.mkOpenFileElmts("Please choose a destination " 
-      + "folder for the letters", dOpener, TextWidth)
+      + "folder for the letters", dirOpener, TextWidth)
       
   private val msg: Label = elementMkr.label("Ready")
   
@@ -80,9 +84,15 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
     
     contents += new BoxPanel(Orientation.Horizontal) {
       contents += elementMkr.button("Generate Letters", submit())
-      contents += Swing.HStrut(6)
+      contents += Swing.HGlue
+    }
+    
+    contents += Swing.VStrut(3)
+    contents += Swing.VStrut(3)
+    
+    contents += new BoxPanel(Orientation.Horizontal) {
       contents += msg
-      contents += Swing.VGlue
+      contents += Swing.HGlue
     }
 
     for (e <- contents)
