@@ -66,7 +66,6 @@ case class InteractionMediator() {
   def validateContent(details: Seq[Map[String,String]], 
       docPack: WordprocessingMLPackage, destination: String): Unit = {
 
-    val detValidator: Validator = DetailsValidator()
     generateLetters(details,docPack,destination)
   }
   

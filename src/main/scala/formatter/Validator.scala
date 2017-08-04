@@ -35,6 +35,7 @@ case class DetailsValidator() extends Validator {
 
 case class VariableValidator() extends Validator {
   import org.docx4j.openpackaging.packages.WordprocessingMLPackage
+  import org.docx4j.XmlUtils
   
   def validate(what: Any): Boolean = {
     val (details,docPack) = what.asInstanceOf[(Seq[Map[String,String]],WordprocessingMLPackage)]
@@ -42,6 +43,10 @@ case class VariableValidator() extends Validator {
   }
   
   def validateVariables(details: Seq[Map[String,String]], docPack: WordprocessingMLPackage): Boolean = {
-    true
+    val text = XmlUtils.marshaltoString(docPack.getMainDocumentPart.getJaxbElement,true)
+    for (map <- details; tuple <- map) {
+      if (text.contains("${"+tuple._1+"}")) return true
+    }
+    false
   }
 }

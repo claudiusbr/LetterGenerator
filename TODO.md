@@ -9,6 +9,7 @@ processed.
 
 Input Validation
 ----------------
+- finish validation on InteractionMediator
 - Test if user input can take special characters
 - Protect against wrong file types being chosen (for input)
 
