@@ -2,34 +2,35 @@ package formatter
 
 import scala.language.implicitConversions
 
-import java.util.{HashMap => JHashMap}
+//import java.util.{HashMap => JHashMap}
 
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable
 import scala.util.matching.Regex
 
 case class DetailsFormatter(input: Input) {
   
   private val Separator: String = ";SEPARATOR;"
 
-  val details: Seq[JHashMap[String,String]] = {
+  val details: Seq[Map[String,String]] = {
 
     val it: Iterator[String] = input.getContents()
 
     val headers: Array[String] = it.next.split(",")
     
-    val det: ArrayBuffer[JHashMap[String,String]] = ArrayBuffer()
+    val det: ArrayBuffer[Map[String,String]] = ArrayBuffer()
 
     // fill up columns with values from input
     while (it.hasNext) {
       val tuple: Array[String] = replCommas(it.next).split(",")
 
-      val jmap = new JHashMap[String,String]()
+      val map = mutable.HashMap[String,String]()
 
-      tuple.indices.foreach(i => jmap.put(headers(i),tuple(i)
+      tuple.indices.foreach(i => map(headers(i)) = tuple(i)
           .replaceAll(s"$Separator",",")
-          .replaceAll("\"","")))
+          .replaceAll("\"",""))
       
-      det += jmap
+      det += map.toMap[String,String]
     }
 
     det.toSeq

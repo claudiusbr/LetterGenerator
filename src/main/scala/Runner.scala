@@ -2,5 +2,6 @@ import renderer.{InteractionMediator, Wizard}
 
 object Runner extends App {
   val medium = InteractionMediator()
-  medium.runInterface(new Wizard(medium))
+  medium.registerInterface(new Wizard(medium))
+  medium.runInterface()
 }
