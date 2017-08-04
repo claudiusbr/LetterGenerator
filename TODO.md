@@ -1,17 +1,23 @@
 TODOs
 =====
 
-Make the text on the first label be dependent on input rather than hardcoded
------------------------------------------------------------------------------
-Currently the text on the label reads 'please choose the csv file'. This should
-not be hard-coded, but rather find the file type depending on how input is being
-processed.
-
 Input Validation
 ----------------
-- finish validation on InteractionMediator
+- make `f` function a member of InteractionMediator and apply it to `validateContent`
 - Test if user input can take special characters
-- Protect against wrong file types being chosen (for input)
+
+
+Implement multi-threading: one for end user, one for system
+----------------------------------------------------------
+Set one thread to message the user, another to work on 
+the logic. Something like a status bar, or three dots.
+
+
+See if there's a way to make implicit conversion to Java HashMap work
+----------------------------------------------------------------------
+The conversion takes scala Map and mutable.Map and wraps them in a 
+Java Map wrapper. If you try to type cast this to Java HashMap it gives
+an error. See if there's a way around it
 
 
 Write tests
@@ -32,7 +38,3 @@ whole thing just fail, or should we prompt user for input?
 - if fault tolerance is more important, do it.
 
 
-Implement multithreading: one for end user, one for system
-----------------------------------------------------------
-Set one thread to message the user, another to work on 
-the logic. Something like a status bar, or three dots.
