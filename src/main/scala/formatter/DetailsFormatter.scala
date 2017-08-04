@@ -2,7 +2,7 @@ package formatter
 
 import scala.language.implicitConversions
 
-//import java.util.{HashMap => JHashMap}
+import java.util.{HashMap => JHashMap}
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable
@@ -12,25 +12,25 @@ case class DetailsFormatter(input: Input) {
   
   private val Separator: String = ";SEPARATOR;"
 
-  val details: Seq[Map[String,String]] = {
+  val details: Seq[JHashMap[String,String]] = {
 
     val it: Iterator[String] = input.getContents()
 
     val headers: Array[String] = it.next.split(",")
     
-    val det: ArrayBuffer[Map[String,String]] = ArrayBuffer()
+    val det: ArrayBuffer[JHashMap[String,String]] = ArrayBuffer()
 
     // fill up columns with values from input
     while (it.hasNext) {
       val tuple: Array[String] = replCommas(it.next).split(",")
 
-      val map = mutable.HashMap[String,String]()
+      val map = new JHashMap[String,String]()
 
-      tuple.indices.foreach(i => map(headers(i)) = tuple(i)
+      tuple.indices.foreach(i => map.put(headers(i), tuple(i)
           .replaceAll(s"$Separator",",")
-          .replaceAll("\"",""))
+          .replaceAll("\"","")))
       
-      det += map.toMap[String,String]
+      det += map
     }
 
     det.toSeq
