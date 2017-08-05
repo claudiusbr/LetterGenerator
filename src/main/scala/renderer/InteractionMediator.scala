@@ -110,18 +110,32 @@ case class InteractionMediator() {
     
     val template: MainDocumentPart = docPack.getMainDocumentPart
 
-    var counter = 0
+    val duplFileChecker = PathValidator()
+
+    def fileName(name: String, counter: Int): String = {
+      val increment = counter + 1
+      if (duplFileChecker.validate(destination+"/"+name+".docx")) 
+        fileName(name+increment,increment)
+      else destination+"/"+name+".docx"
+    }
 
     for(smap <- details) {
 
+      val fname = smap.collectFirst({case ("File Name",v: String) => v}) match {
+        case Some(file) => file
+        //case None => smap.head._2
+        case None => "Output"
+      }
+      
       val map: JHashMap[String,String] = new JHashMap(smap.asJava)
 
       val jaxbElement = template.getJaxbElement
       val xml: String = XmlUtils.marshaltoString(jaxbElement, true)
       val replaced: Object = XmlUtils.unmarshallFromTemplate(xml, map)
       template.setJaxbElement(replaced.asInstanceOf[Document])
-      counter += 1
-      new SaveToZipFile(docPack).save(s"$destination/Output$counter.docx")
+      
+      
+      new SaveToZipFile(docPack).save(s"${fileName(fname,0)}")
       template.setJaxbElement(jaxbElement)
     }
 
