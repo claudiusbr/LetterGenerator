@@ -11,6 +11,7 @@ case class DetailsFormatter(input: Input) {
   private val Separator: String = ";SEPARATOR;"
 
   val details: List[Map[String,String]] = {
+    import Converters.fromAnyToIterator
 
     val it: Iterator[String] = input.getContents()
 
@@ -26,7 +27,7 @@ case class DetailsFormatter(input: Input) {
 
       tuple.indices.foreach(i => map(headers(i)) = tuple(i)
           .replaceAll(s"$Separator",",")
-          .replaceAll("\"","")))
+          .replaceAll("\"",""))
       
       det += map.toMap
     }
@@ -46,8 +47,5 @@ case class DetailsFormatter(input: Input) {
       case None => formatted
     }
   }
-  
-  implicit def fromAnyToIterator(par: Any): Iterator[String] = 
-    par.asInstanceOf[Iterator[String]]
 
 }

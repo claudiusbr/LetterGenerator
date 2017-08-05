@@ -25,24 +25,22 @@ case class DetailsValidator() extends Validator {
 
   def validate(what: Any): Boolean = validateDetailsNotEmpty(what)
 
-  def validateDetailsNotEmpty(details: List[Map[String,String]]): Boolean = {
-    for (map <- details; kv <- map) {
+  def validateDetailsNotEmpty(details: Map[String,String]): Boolean = {
+    for (kv <- details) {
       if (kv._2.isEmpty) return false 
     }
     true
   }
 }
 
-case class VariableValidator() extends Validator {
+case class TemplateValidator(text: String) extends Validator {
   def validate(what: Any): Boolean = {
-    val (detailsHeaders,text) = what.asInstanceOf[(Iterable[String],String)]
-    validateVariables(detailsHeaders,text)
+    val detailsHeader = what.asInstanceOf[String]
+    validateVariables(detailsHeader)
   }
   
-  def validateVariables(detailsHeaders: Iterable[String], text: String): Boolean = {
-    for (header <- detailsHeaders) {
-      if (text.contains("${"+header+"}")) return true
-    }
+  def validateVariables(variableName: String): Boolean = {
+    if (text.contains("${"+variableName+"}")) return true
     false
   }
 }
