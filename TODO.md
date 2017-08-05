@@ -1,9 +1,13 @@
 TODOs
 =====
 
+File Names
+----------
+- give option for user to choose filename from existing columns
+
+
 Input Validation
 ----------------
-- make `f` function a member of InteractionMediator and apply it to `validateContent`
 - Test if user input can take special characters
 
 
