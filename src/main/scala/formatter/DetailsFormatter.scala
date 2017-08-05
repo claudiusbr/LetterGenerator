@@ -2,9 +2,7 @@ package formatter
 
 import scala.language.implicitConversions
 
-import java.util.{HashMap => JHashMap}
-
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.ListBuffer
 import scala.collection.mutable
 import scala.util.matching.Regex
 
@@ -12,28 +10,28 @@ case class DetailsFormatter(input: Input) {
   
   private val Separator: String = ";SEPARATOR;"
 
-  val details: Seq[JHashMap[String,String]] = {
+  val details: List[Map[String,String]] = {
 
     val it: Iterator[String] = input.getContents()
 
     val headers: Array[String] = it.next.split(",")
     
-    val det: ArrayBuffer[JHashMap[String,String]] = ArrayBuffer()
+    val det: ListBuffer[Map[String,String]] = ListBuffer()
 
     // fill up columns with values from input
     while (it.hasNext) {
       val tuple: Array[String] = replCommas(it.next).split(",")
 
-      val map = new JHashMap[String,String]()
+      val map = new mutable.HashMap[String,String]()
 
-      tuple.indices.foreach(i => map.put(headers(i), tuple(i)
+      tuple.indices.foreach(i => map(headers(i)) = tuple(i)
           .replaceAll(s"$Separator",",")
           .replaceAll("\"","")))
       
-      det += map
+      det += map.toMap
     }
 
-    det.toSeq
+    det.toList
   }
   
   def replCommas(text: String): String = {

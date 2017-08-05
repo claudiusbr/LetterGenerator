@@ -33,45 +33,43 @@ case class InteractionMediator() {
       "template file" -> gui.templateFile,
       "destination folder" -> gui.destinationFolder
     )
+
+    val message = "Could not reach the %s. Please check if path is correct"+
+      ", or report this issue"
     
-
-    f[String](paths,validator,loadInformation())
-
-    def f[A](p: List[(String,A)], validator: Validator,
-        op:  => Unit): Unit = p match {
-      case Nil => throw new IllegalArgumentException("argument p cannot be an empty list")
-
-      case x :: Nil => validator.validate(x._2) match {
-        case true => loadInformation()
-        case false => messageUser(s"Could not reach the ${x._1}. Please check if path is correct, or report this issue")
-      }
-
-      case x :: xs => validator.validate(x._2) match {
-        case true => f(xs,validator,loadInformation())
-        case false => messageUser(s"Could not reach the ${x._1}. Please check if path is correct, or report this issue")
-      }
-    }
+    vldt[String](paths,validator,loadDetails(),message)
   }
   
-  def loadInformation(): Unit = {
-    val details: Seq[JHashMap[String,String]] = 
+  def loadDetails(): Unit = {
+    val details: List[Map[String,String]] = 
       new DetailsFormatter(CsvInput(gui.detailsFile)).details
 
+    validateDetails(details)
+    /*
     val docPack: WordprocessingMLPackage = 
       TemplateFormatter(DocxInput(gui.templateFile)).template
 
     val destination = gui.destinationFolder
     
     validateContent(details,docPack,destination)
+    */
   }
 
-  def validateContent(details: Seq[JHashMap[String,String]], 
+  def validateDetails(details: List[Map[String,String]]): Unit = {
+    
+  }
+
+  def validateContent(details: List[Map[String,String]], 
       docPack: WordprocessingMLPackage, destination: String): Unit = {
 
-    generateLetters(details,docPack,destination)
+    val docText: String = WordMLToStringFormatter(docPack).text
+
+
+    
+    //vldt[Map[String,String]](,VariableValidator(),generateLetters(details,docPack,destination),)
   }
   
-  def generateLetters(details: Seq[JHashMap[String,String]],
+  def generateLetters(details: List[Map[String,String]],
       docPack: WordprocessingMLPackage, destination: String): Unit = {
 
     import scala.collection.JavaConverters._
@@ -80,7 +78,9 @@ case class InteractionMediator() {
 
     var counter = 0
 
-    for(map <- details) {
+    for(smap <- details) {
+
+      val map: JHashMap[String,String] = new JHashMap(smap.asJava)
 
       val jaxbElement = template.getJaxbElement
       val xml: String = XmlUtils.marshaltoString(jaxbElement, true)
@@ -93,5 +93,21 @@ case class InteractionMediator() {
 
     messageUser("Done!")
 
+  }
+
+
+  private def vldt[A](p: List[(String,A)], validator: Validator,
+      op:  => Unit, message: String): Unit = p match {
+    case Nil => throw new IllegalArgumentException("argument p cannot be an empty list")
+
+    case x :: Nil => validator.validate(x._2) match {
+      case true => loadInformation()
+      case false => messageUser(message.format(x._1))
+    }
+
+    case x :: xs => validator.validate(x._2) match {
+      case true => vldt(xs,validator,loadInformation(),message)
+      case false => messageUser(message.format(x._1))
+    }
   }
 }

@@ -25,7 +25,7 @@ case class DetailsValidator() extends Validator {
 
   def validate(what: Any): Boolean = validateDetailsNotEmpty(what)
 
-  def validateDetailsNotEmpty(details: Seq[Map[String,String]]): Boolean = {
+  def validateDetailsNotEmpty(details: List[Map[String,String]]): Boolean = {
     for (map <- details; kv <- map) {
       if (kv._2.isEmpty) return false 
     }
@@ -34,18 +34,14 @@ case class DetailsValidator() extends Validator {
 }
 
 case class VariableValidator() extends Validator {
-  import org.docx4j.openpackaging.packages.WordprocessingMLPackage
-  import org.docx4j.XmlUtils
-  
   def validate(what: Any): Boolean = {
-    val (details,docPack) = what.asInstanceOf[(Seq[Map[String,String]],WordprocessingMLPackage)]
-    validateVariables(details,docPack)
+    val (detailsHeaders,text) = what.asInstanceOf[(Iterable[String],String)]
+    validateVariables(detailsHeaders,text)
   }
   
-  def validateVariables(details: Seq[Map[String,String]], docPack: WordprocessingMLPackage): Boolean = {
-    val text = XmlUtils.marshaltoString(docPack.getMainDocumentPart.getJaxbElement,true)
-    for (map <- details; tuple <- map) {
-      if (text.contains("${"+tuple._1+"}")) return true
+  def validateVariables(detailsHeaders: Iterable[String], text: String): Boolean = {
+    for (header <- detailsHeaders) {
+      if (text.contains("${"+header+"}")) return true
     }
     false
   }
