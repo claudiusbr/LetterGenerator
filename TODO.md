@@ -11,6 +11,15 @@ Cleanup
 - move the ComboBox generation to ElementMaker
 
 
+Test Scenarios
+--------------
+- Test what would happen if the user provided only one column and a template with no variables
+  - e.g., someone decides to use the generator to just create the exact same
+    copy of a letter, but each with a different filename. How would the
+    DetailsValidator work there if it would remove the only column provided
+    from the list, therefore giving it an empty list?
+
+
 Input Validation
 ----------------
 - Test if user input can take special characters
