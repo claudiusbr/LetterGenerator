@@ -38,7 +38,7 @@ case class InteractionMediator() {
     vldt[String](path, validator, columns = DetailsFormatter(
       CsvInput(path.head._2)) .details.head.keySet.toList, message)
     
-    println(columns)
+    //println(columns)
     List("") ++ columns
 
   }
@@ -64,13 +64,6 @@ case class InteractionMediator() {
       "%s is incomplete. Please check it and try again" 
       
     validateDetails(details,DetailsValidator(), detailsMessage)
-    /*
-    val docPack: WordprocessingMLPackage = 
-
-    val destination = gui.destinationFolder
-    
-    validateContent(details,docPack,destination)
-    */
   }
 
   def validateDetails(details: List[Map[String,String]],

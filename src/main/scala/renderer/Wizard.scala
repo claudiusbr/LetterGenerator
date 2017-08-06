@@ -31,11 +31,12 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
   private val (dtLbl, dtTxt, dtBtn) = 
     elementMkr.mkOpenFileElmts("Please choose the file with the"
       + " details which will go on the letters", csvOpener, TextWidth)
-      
+
   // drop down box for file name column      
   private var textChangeFlag = dtTxt.text
   private val fileNameColumn = new ComboBox(List[String]())
   private val fnLbl = elementMkr.label(" ") 
+  def fNameColumn: String = fileNameColumn.selection.item
   
   // source of letter template
   private val (tpltLbl, tpltTxt, tpltBtn) = 
