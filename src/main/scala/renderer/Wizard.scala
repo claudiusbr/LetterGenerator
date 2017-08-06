@@ -1,6 +1,8 @@
 package renderer
 
 import scala.swing._
+import scala.swing.event._
+
 import java.io.File
 import javax.swing.filechooser.FileNameExtensionFilter
 
@@ -10,7 +12,7 @@ import javax.swing.filechooser.FileNameExtensionFilter
  */
 class Wizard(medium: InteractionMediator) extends MainFrame {
   title = "Letter Maker Wizard" 
-  preferredSize = new Dimension(695,320)
+  preferredSize = new Dimension(695,340)
   val TextWidth = 56
   
   // for making the buttons and labels
@@ -29,6 +31,11 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
   private val (dtLbl, dtTxt, dtBtn) = 
     elementMkr.mkOpenFileElmts("Please choose the file with the"
       + " details which will go on the letters", csvOpener, TextWidth)
+      
+  // drop down box for file name column      
+  private var textChangeFlag = dtTxt.text
+  private val fileNameColumn = new ComboBox(List[String]())
+  private val fnLbl = elementMkr.label(" ") 
   
   // source of letter template
   private val (tpltLbl, tpltTxt, tpltBtn) = 
@@ -44,9 +51,14 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
   
   def message(text: String): Unit = msg.text = text
   
+  listenTo(dtTxt)
+
+  reactions += { case ValueChanged(dtTxt) => comboBoxRoutine() }
+  
   setMaxHeight(dtTxt)
   setMaxHeight(tpltTxt)
   setMaxHeight(destTxt)
+  setMaxHeight(fileNameColumn)
   
   contents = new BoxPanel(Orientation.Vertical) {
     contents += new BoxPanel(Orientation.Vertical) {
@@ -56,6 +68,12 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
         contents += dtTxt
         contents += Swing.HStrut(3)
         contents += dtBtn
+      }
+      contents += Swing.VStrut(5)
+      contents += new BoxPanel(Orientation.Vertical) {
+        contents += fnLbl
+        contents += Swing.VStrut(5)
+        contents += fileNameColumn
       }
     }
 
@@ -109,6 +127,20 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
   def detailsFile: String = dtTxt.text
   def templateFile: String = tpltTxt.text
   def destinationFolder: String = destTxt.text
+  
+  def comboBoxRoutine(): Unit = {
+    if (dtTxt.text != textChangeFlag) {
+      fileNameColumn.peer.setModel(
+          ComboBox.newConstantModel(
+              medium.columnsForFileName()))
+      textChangeFlag = dtTxt.text
+      
+      if (fileNameColumn.peer.getModel.getSize > 1) 
+        fnLbl.text = "Please select the column which contains "+
+          "the file names for the new documents"
+    }
+  }
+
 }
 
 

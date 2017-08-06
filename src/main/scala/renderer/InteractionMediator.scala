@@ -27,6 +27,22 @@ case class InteractionMediator() {
     validatePaths(PathValidator() ) 
   }
   
+  def columnsForFileName(): List[String] = {
+    val path: List[(String,String)] = List(("details file", gui.detailsFile))
+    val validator = PathValidator()
+    val message = "Could not reach the %s. Please check if path is correct"+
+      ", or report this issue"
+
+    var columns = List[String]()
+
+    vldt[String](path, validator, columns = DetailsFormatter(
+      CsvInput(path.head._2)) .details.head.keySet.toList, message)
+    
+    println(columns)
+    List("") ++ columns
+
+  }
+  
   def validatePaths(validator: Validator ): Unit = {
     val paths = List[(String,String)](
       "details file" -> gui.detailsFile,
