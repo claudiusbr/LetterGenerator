@@ -10,12 +10,12 @@ case class DetailsFormatter(input: Input) {
   
   private val Separator: String = ";SEPARATOR;"
 
+  import Converters.fromAnyToIterator
+  val it: Iterator[String] = input.getContents()
+
+  val headers: Array[String] = it.next.split(",")
+
   val details: List[Map[String,String]] = {
-    import Converters.fromAnyToIterator
-
-    val it: Iterator[String] = input.getContents()
-
-    val headers: Array[String] = it.next.split(",")
     
     val det: ListBuffer[Map[String,String]] = ListBuffer()
 

@@ -41,13 +41,13 @@ case class InteractionMediator() {
   }
   
   def loadDetails(): Unit = {
-    val details: List[Map[String,String]] = 
-      new DetailsFormatter(CsvInput(gui.detailsFile)).details
+    val form = DetailsFormatter(CsvInput(gui.detailsFile))
+    val details: List[Map[String,String]] = form.details
 
     val detailsMessage = "Details file error: the row with values "+
       "%s is incomplete. Please check it and try again" 
       
-    validateDetails(details,DetailsValidator(), detailsMessage)
+    validateDetails(details,DetailsValidator(form.headers), detailsMessage)
   }
 
 
@@ -83,9 +83,9 @@ case class InteractionMediator() {
     val validator = TemplateValidator(docText)
     val message: String = "Error: could not find variable %s on template."
     val headers: List[(String,String)] = gui.fNameInTemplate match {
+      case true => details.head.keySet.map(header => (header,header)).toList
       case false => details.head.keySet.filter(_ != gui.fNameColumn)
         .map(header => (header,header)).toList
-      case true => details.head.keySet.map(header => (header,header)).toList
     }
     vldt[String](headers,validator,generateLetters(details,docPack),message)
   }
@@ -107,13 +107,17 @@ case class InteractionMediator() {
     }
 
     for(smap <- details) {
-      val fname = smap.collectFirst({case ("File Name",v: String) => v}) match {
+      val fname = smap.collectFirst({
+        case (k: String,v: String) if k == gui.fNameColumn => v
+      }) match {
         case Some(file) => file
-        //case None => smap.head._2
         case None => "Output"
       }
       
-      val map: JHashMap[String,String] = new JHashMap(smap.asJava)
+      val map: JHashMap[String,String] = gui.fNameInTemplate match {
+        case true => new JHashMap(smap.asJava)
+        case false => new JHashMap(smap.filter(_._1 != gui.fNameColumn).asJava)
+      }
 
       val jaxbElement = template.getJaxbElement
       val xml: String = XmlUtils.marshaltoString(jaxbElement, true)
