@@ -12,7 +12,7 @@ import javax.swing.filechooser.FileNameExtensionFilter
  */
 class Wizard(medium: InteractionMediator) extends MainFrame {
   title = "Letter Maker Wizard" 
-  preferredSize = new Dimension(695,340)
+  preferredSize = new Dimension(695,360)
   val TextWidth = 56
   
   // for making the buttons and labels
@@ -135,6 +135,7 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
           ComboBox.newConstantModel(
               medium.columnsForFileName()))
       textChangeFlag = dtTxt.text
+      fileNameColumn.selection.item = ""
       
       if (fileNameColumn.peer.getModel.getSize > 1) 
         fnLbl.text = "Please select the column which contains "+
