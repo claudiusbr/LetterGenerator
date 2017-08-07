@@ -3,8 +3,8 @@ TODOs
 
 File Names
 ----------
-- give option for user to choose filename from existing columns
-  - implement the logic on InteractionMediator
+- add tick box to Wizard gui
+
 
 Cleanup
 -------
