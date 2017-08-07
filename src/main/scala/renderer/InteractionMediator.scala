@@ -50,28 +50,22 @@ case class InteractionMediator() {
     validateDetails(details,DetailsValidator(), detailsMessage)
   }
 
+
   def validateDetails(details: List[Map[String,String]],
       validator: DetailsValidator, message: String): Unit = {
     
     var flag = false
-
     f(details)
-
     if(flag) loadTemplate(details)
     
     def f(details: List[Map[String,String]]): Unit = details match {
-
-      case Nil => 
-        messageUser("details list cannot be empty")
-
+      case Nil => messageUser("details list cannot be empty")
       case x :: Nil => vldt[Map[String,String]](
           List((x.values.mkString(" "),x)), validator, 
-          flag = true, message)
-
+            flag = true, message)
       case x :: xs => vldt[Map[String,String]](
           List((x.values.mkString(" "),x)), validator, f(xs), message)
     }
-
   }
 
   def loadTemplate(details: List[Map[String,String]]): Unit = {
@@ -82,27 +76,27 @@ case class InteractionMediator() {
     validateTemplate(details, docPack)
   }
   
+
   def validateTemplate(details: List[Map[String,String]], 
       docPack: WordprocessingMLPackage): Unit = {
-
     val docText: String = WordMLToStringFormatter(docPack).text
     val validator = TemplateValidator(docText)
     val message: String = "Error: could not find variable %s on template."
-    val headers: List[(String,String)] = 
-      details.head.keySet.map(header => (header,header)).toList
-    
+    val headers: List[(String,String)] = gui.fNameInTemplate match {
+      case false => details.head.keySet.filter(_ != gui.fNameColumn)
+        .map(header => (header,header)).toList
+      case true => details.head.keySet.map(header => (header,header)).toList
+    }
     vldt[String](headers,validator,generateLetters(details,docPack),message)
   }
   
+
   def generateLetters(details: List[Map[String,String]],
       docPack: WordprocessingMLPackage): Unit = {
-
     import scala.collection.JavaConverters._
 
     val destination: String = gui.destinationFolder
-    
     val template: MainDocumentPart = docPack.getMainDocumentPart
-
     val duplFileChecker = PathValidator()
 
     def fileName(name: String, counter: Int): String = {
@@ -113,7 +107,6 @@ case class InteractionMediator() {
     }
 
     for(smap <- details) {
-
       val fname = smap.collectFirst({case ("File Name",v: String) => v}) match {
         case Some(file) => file
         //case None => smap.head._2
@@ -126,7 +119,6 @@ case class InteractionMediator() {
       val xml: String = XmlUtils.marshaltoString(jaxbElement, true)
       val replaced: Object = XmlUtils.unmarshallFromTemplate(xml, map)
       template.setJaxbElement(replaced.asInstanceOf[Document])
-      
       
       new SaveToZipFile(docPack).save(s"${fileName(fname,0)}")
       template.setJaxbElement(jaxbElement)

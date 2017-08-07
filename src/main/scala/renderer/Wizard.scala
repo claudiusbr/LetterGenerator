@@ -38,6 +38,12 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
   private val fnLbl = elementMkr.label(" ") 
   def fNameColumn: String = fileNameColumn.selection.item
   
+  // check box to check if file name is also present in template
+  // as a variable to be replaced
+  private val fnAlsoInTemplate = new CheckBox("File name also a variable")
+  fnAlsoInTemplate.selected = false
+  def fNameInTemplate: Boolean = fnAlsoInTemplate.selected
+  
   // source of letter template
   private val (tpltLbl, tpltTxt, tpltBtn) = 
     elementMkr.mkOpenFileElmts("Please choose the file with the "
