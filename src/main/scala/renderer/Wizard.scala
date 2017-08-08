@@ -40,7 +40,7 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
   
   // check box to check if file name is also present in template
   // as a variable to be replaced
-  private val fnAlsoInTemplate = new CheckBox("File name also a variable")
+  private val fnAlsoInTemplate = new CheckBox("File name also part of letter")
   fnAlsoInTemplate.selected = false
   def fNameInTemplate: Boolean = fnAlsoInTemplate.selected
   
@@ -80,7 +80,11 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
       contents += new BoxPanel(Orientation.Vertical) {
         contents += fnLbl
         contents += Swing.VStrut(5)
-        contents += fileNameColumn
+        contents += new BoxPanel(Orientation.Horizontal) {
+          contents += fileNameColumn
+          contents += Swing.HStrut(3)
+          contents += fnAlsoInTemplate
+        }
       }
     }
 
@@ -107,6 +111,9 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
      }
     }
     
+    contents += Swing.VStrut(3)
+    contents += Swing.VStrut(3)
+
     contents += new BoxPanel(Orientation.Horizontal) {
       contents += elementMkr.button("Generate Letters", submit())
       contents += Swing.HGlue
