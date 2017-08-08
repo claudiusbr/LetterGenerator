@@ -101,9 +101,11 @@ case class InteractionMediator() {
 
     def fileName(name: String, counter: Int): String = {
       val increment = counter + 1
-      if (duplFileChecker.validate(destination+"/"+name+".docx")) 
-        fileName(name+increment,increment)
-      else destination+"/"+name+".docx"
+      if (duplFileChecker.validate(destination+"/"+name+".docx")) {
+        if (duplFileChecker.validate(destination+"/"+name+increment+".docx")) 
+          fileName(name,increment)
+        else destination+"/"+name+increment+".docx"
+      } else destination+"/"+name+".docx"
     }
 
     for(smap <- details) {
