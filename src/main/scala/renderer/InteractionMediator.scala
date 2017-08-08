@@ -12,6 +12,7 @@ import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
 import scala.swing.MainFrame
 
 import java.util.{HashMap => JHashMap}
+import scala.annotation.tailrec
 
 case class InteractionMediator() {
   private var gui: Wizard = _ 
@@ -22,11 +23,13 @@ case class InteractionMediator() {
   
   def messageUser(text: String): Unit = gui.message(text)
   
+
   def submit(): Unit = {
     messageUser("Processing...")
-    validatePaths(PathValidator() ) 
+    validatePaths(PathValidator()) 
   }
   
+
   def validatePaths(validator: Validator ): Unit = {
     val paths = List[(String,String)](
       "details file" -> gui.detailsFile,
@@ -40,6 +43,7 @@ case class InteractionMediator() {
     vldt[String](paths,validator,loadDetails(),message)
   }
   
+
   def loadDetails(): Unit = {
     val form = DetailsFormatter(CsvInput(gui.detailsFile))
     val details: List[Map[String,String]] = form.details
@@ -67,6 +71,7 @@ case class InteractionMediator() {
           List((x.values.mkString(" "),x)), validator, f(xs), message)
     }
   }
+
 
   def loadTemplate(details: List[Map[String,String]]): Unit = {
     val docPack: WordprocessingMLPackage = 
@@ -99,6 +104,7 @@ case class InteractionMediator() {
     val template: MainDocumentPart = docPack.getMainDocumentPart
     val duplFileChecker = PathValidator()
 
+    @tailrec
     def fileName(name: String, counter: Int): String = {
       val increment = counter + 1
       if (duplFileChecker.validate(destination+"/"+name+".docx")) {
@@ -134,7 +140,7 @@ case class InteractionMediator() {
 
   }
 
-
+  @tailrec
   private def vldt[A](p: List[(String,A)], validator: Validator,
       op:  => Unit, message: String): Unit = p match {
     case Nil => 
