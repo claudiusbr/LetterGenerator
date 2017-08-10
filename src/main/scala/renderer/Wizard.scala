@@ -15,7 +15,7 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
   preferredSize = new Dimension(695,360)
   val TextWidth = 56
   
-  // for making the buttons and labels
+  // for making the buttons, labels and textfields
   val elementMkr = ElementMaker()
   
   // for opening files and directories
@@ -67,52 +67,55 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
   setMaxHeight(destTxt)
   setMaxHeight(fileNameColumn)
   
+  val VShortGap: Int = 5
+  val VLargeGap: Int = 30
+  val HShortGap: Int = 3
+  
   contents = new BoxPanel(Orientation.Vertical) {
     contents += new BoxPanel(Orientation.Vertical) {
       contents += dtLbl
-      contents += Swing.VStrut(5)
+      contents += Swing.VStrut(VShortGap)
       contents += new BoxPanel(Orientation.Horizontal) {
         contents += dtTxt
-        contents += Swing.HStrut(3)
+        contents += Swing.HStrut(HShortGap)
         contents += dtBtn
       }
-      contents += Swing.VStrut(5)
+      contents += Swing.VStrut(VShortGap)
       contents += new BoxPanel(Orientation.Vertical) {
         contents += fnLbl
-        contents += Swing.VStrut(5)
+        contents += Swing.VStrut(VShortGap)
         contents += new BoxPanel(Orientation.Horizontal) {
           contents += fileNameColumn
-          contents += Swing.HStrut(3)
+          contents += Swing.HStrut(HShortGap)
           contents += fnAlsoInTemplate
         }
       }
     }
 
-    contents += Swing.VStrut(30)
+    contents += Swing.VStrut(VLargeGap)
     contents += new BoxPanel(Orientation.Vertical) {
      contents += tpltLbl
-     contents += Swing.VStrut(5)
+     contents += Swing.VStrut(VShortGap)
      contents += new BoxPanel(Orientation.Horizontal) {
        contents += tpltTxt
-       contents += Swing.HStrut(3)
+       contents += Swing.HStrut(HShortGap)
        contents += tpltBtn
      }
     }
 
-    contents += Swing.VStrut(30)
+    contents += Swing.VStrut(VLargeGap)
 
     contents += new BoxPanel(Orientation.Vertical) {
      contents += destLbl
-     contents += Swing.VStrut(5)
+     contents += Swing.VStrut(VShortGap)
      contents += new BoxPanel(Orientation.Horizontal) {
        contents += destTxt
-       contents += Swing.HStrut(3)
+       contents += Swing.HStrut(HShortGap)
        contents += destBtn
      }
     }
     
-    contents += Swing.VStrut(3)
-    contents += Swing.VStrut(3)
+    contents += Swing.VStrut(VShortGap)
 
     contents += new BoxPanel(Orientation.Horizontal) {
       contents += elementMkr.button("Generate Letters", submit())

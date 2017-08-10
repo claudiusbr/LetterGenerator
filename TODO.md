@@ -13,6 +13,8 @@ Improve versatility
 Cleanup
 -------
 - move the ComboBox generation to ElementMaker
+  - actually, I'm not so sure if moving the ComboBox to elementMaker would make such a big difference, so I'll leave it as it is.
+  - TODO: delete this todo.
 
 
 Test Scenarios
