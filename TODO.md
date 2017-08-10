@@ -10,13 +10,6 @@ Improve versatility
     there is a better way of doing find-replace of variables than the current one
 
 
-Cleanup
--------
-- move the ComboBox generation to ElementMaker
-  - actually, I'm not so sure if moving the ComboBox to elementMaker would make such a big difference, so I'll leave it as it is.
-  - TODO: delete this todo.
-
-
 Test Scenarios
 --------------
 - Test what would happen if the user provided only one column and a template with no variables
