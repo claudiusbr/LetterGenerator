@@ -18,6 +18,11 @@ case class InteractionMediator() {
   private var gui: Wizard = _ 
   
   def registerInterface(gui: MainFrame): Unit = this.gui = gui.asInstanceOf[Wizard]
+
+  def hasGui: Boolean = Option[MainFrame](gui) match {
+    case Some(_) => true
+    case None => false
+  }
   
   def runInterface(): Unit = gui.visible = true
   
