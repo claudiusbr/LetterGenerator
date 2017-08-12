@@ -1,6 +1,10 @@
 TODOs
 =====
 
+Make a popup which prints stack traces
+--------------------------------------
+
+
 Improve versatility
 -------------------
 - currently it can handle simple schemas and variables which only span single lines.
