@@ -92,7 +92,7 @@ case class InteractionMediator() {
     val docText: String = WordMLToStringFormatter(docPack).text
     val validator = TemplateValidator(docText)
     val message: String = "Error: could not find variable %s on template."
-    val headers: List[(String,String)] = gui.fNameInTemplate match {
+    val headers: List[(String,String)] = gui.fnAlsoInTemplate match {
       case true => details.head.keySet.map(header => (header,header)).toList
       case false => details.head.keySet.filter(_ != gui.fNameColumn)
         .map(header => (header,header)).toList
@@ -127,7 +127,7 @@ case class InteractionMediator() {
         case None => "Output"
       }
       
-      val map: JHashMap[String,String] = gui.fNameInTemplate match {
+      val map: JHashMap[String,String] = gui.fnAlsoInTemplate match {
         case true => new JHashMap(smap.asJava)
         case false => new JHashMap(smap.filter(_._1 != gui.fNameColumn).asJava)
       }

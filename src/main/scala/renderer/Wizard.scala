@@ -40,9 +40,9 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
   
   // check box to check if file name is also present in template
   // as a variable to be replaced
-  private val fnAlsoInTemplate = new CheckBox("File name also part of letter")
-  fnAlsoInTemplate.selected = false
-  def fNameInTemplate: Boolean = fnAlsoInTemplate.selected
+  private val fnAlsoInTemplate_ = new CheckBox("File name also part of letter")
+  fnAlsoInTemplate_.selected = false
+  def fnAlsoInTemplate: Boolean = fnAlsoInTemplate_.selected
   
   // source of letter template
   private val (tpltLbl, tpltTxt, tpltBtn) = 
@@ -57,6 +57,8 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
   private val msg: Label = elementMkr.label("Ready")
   
   def message(text: String): Unit = msg.text = text
+
+  def alert(text: String): Unit = Dialog.showMessage(this,"Alert",text)
   
   listenTo(dtTxt)
 
@@ -87,7 +89,7 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
         contents += new BoxPanel(Orientation.Horizontal) {
           contents += fileNameColumn
           contents += Swing.HStrut(HShortGap)
-          contents += fnAlsoInTemplate
+          contents += fnAlsoInTemplate_
         }
       }
     }
