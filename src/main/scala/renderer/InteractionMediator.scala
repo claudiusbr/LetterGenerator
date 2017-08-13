@@ -64,7 +64,13 @@ case class InteractionMediator() {
       validator: DetailsValidator, message: String): Unit = {
     
     var flag = false
-    f(details)
+    try f(details) catch {
+      case e: Throwable => {
+        gui.message("Error")
+        e.printStackTrace()
+        gui.alert(e.getStackTrace.mkString("\n"))
+      }
+    }
     if(flag) loadTemplate(details)
     
     def f(details: List[Map[String,String]]): Unit = details match {

@@ -58,7 +58,7 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
   
   def message(text: String): Unit = msg.text = text
 
-  def alert(text: String): Unit = Dialog.showMessage(this,"Alert",text)
+  def alert(text: String): Unit = Dialog.showMessage(this,text,"Alert")
   
   listenTo(dtTxt)
 
