@@ -1,6 +1,11 @@
 TODOs
 =====
 
+redirect output of docx4j and dependencies
+------------------------------------------
+- a lot of logging seems to go on from the docx4j package. redirect that to a
+  logger or something else.
+
 optimise validateDetails' 'f' function
 --------------------------------------
 - currently creating too many stack frames. Make it tail recursive, somehow.
