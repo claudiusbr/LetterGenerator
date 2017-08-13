@@ -1,9 +1,9 @@
 TODOs
 =====
 
-Make a popup which prints stack traces
+optimise validateDetails' 'f' function
 --------------------------------------
-
+- currently creating too many stack frames. Make it tail recursive, somehow.
 
 Improve versatility
 -------------------
