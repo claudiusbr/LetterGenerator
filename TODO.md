@@ -33,8 +33,8 @@ Input Validation
 - Test if user input can take special characters
 
 
-Implement multi-threading: one for end user, one for system
-----------------------------------------------------------
+improve on usage of Future in a way that the user is updated
+------------------------------------------------------------
 Set one thread to message the user, another to work on 
 the logic. Something like a status bar, or three dots.
 
