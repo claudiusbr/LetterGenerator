@@ -12,7 +12,11 @@ import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
 import scala.swing.MainFrame
 
 import java.util.{HashMap => JHashMap}
+
 import scala.annotation.tailrec
+
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 case class InteractionMediator() {
   private var gui: Wizard = _ 
@@ -31,7 +35,7 @@ case class InteractionMediator() {
 
   def submit(): Unit = {
     messageUser("Processing...")
-    validatePaths(PathValidator()) 
+    Future { validatePaths(PathValidator()) }
   }
   
 
