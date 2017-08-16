@@ -35,7 +35,7 @@ case class InteractionMediator() {
 
   def submit(): Unit = {
     messageUser("Processing...")
-    Future { validatePaths(PathValidator()) }.foreach(_ => messageUser("Done!"))
+    Future { validatePaths(PathValidator()) }
   }
   
 
@@ -150,6 +150,9 @@ case class InteractionMediator() {
       new SaveToZipFile(docPack).save(s"${fileName(fname,0)}")
       template.setJaxbElement(jaxbElement)
     }
+
+    messageUser("Done!")
+
   }
 
   @tailrec
