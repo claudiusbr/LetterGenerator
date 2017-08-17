@@ -1,3 +1,4 @@
+package lettergenerator
 import renderer.{InteractionMediator, Wizard}
 
 object Runner extends App {

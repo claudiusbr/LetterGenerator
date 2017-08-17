@@ -1,3 +1,4 @@
+package lettergenerator
 package renderer
 
 import scala.swing._

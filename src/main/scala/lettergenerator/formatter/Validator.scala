@@ -1,3 +1,4 @@
+package lettergenerator
 package formatter
 
 //import scala.collection.JavaConverters._

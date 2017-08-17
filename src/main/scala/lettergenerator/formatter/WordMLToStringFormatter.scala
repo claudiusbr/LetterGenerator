@@ -1,3 +1,4 @@
+package lettergenerator
 package formatter
 
 import org.docx4j.XmlUtils
