@@ -1,6 +1,11 @@
 TODOs
 =====
 
+give user option of allowing empty cells in columns
+---------------------------------------------------
+- checkbox allowing details.csv cells to contain empty values.
+
+
 redirect output of docx4j and dependencies
 ------------------------------------------
 - a lot of logging seems to go on from the docx4j package. redirect that to a
@@ -10,13 +15,15 @@ optimise validateDetails' 'f' function
 --------------------------------------
 - currently creating too many stack frames. Make it tail recursive, somehow.
 
-Improve versatility
+DONE: Improve versatility
 -------------------
 - currently it can handle simple schemas and variables which only span single lines.
   - read through the docx4j documentation and see if there is a better way to
     handle the sharepoint schemas;
   - check if using scala xml would have a better effect on the variables, or if
     there is a better way of doing find-replace of variables than the current one
+    - this seems to be more easily handled by the user making sure the document
+      is properly marked up.
 
 
 Test Scenarios
