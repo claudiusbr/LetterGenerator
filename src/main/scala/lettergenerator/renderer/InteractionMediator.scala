@@ -182,9 +182,8 @@ case class InteractionMediator() {
     var columns = List[String]()
 
     vldt[String](path, validator, columns = DetailsFormatter(
-      CsvInput(path.head._2)) .details.head.keySet.toList, message)
+      CsvInput(path.head._2)).details.head.keySet.toList, message)
     
-    //println(columns)
     List("") ++ columns
 
   }
