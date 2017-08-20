@@ -1,6 +1,43 @@
 TODOs
 =====
 
+
+Refactor
+--------
+- make each method in InteractionMediator a standalone one and make one method
+  responsible for calling them and checking if they are ok, or if they returned
+  an exception, and communicate any relevant details to the user. E.g.:
+  ```
+  // have all methods return a boolean
+  coordinate() {
+    if (validatePaths) {
+      messageUser("Files exist")
+      if(loadDetails) {
+        messageUser("details loaded")
+        if (validateDetails) {
+          
+        } else {
+          messageUser("could not validate details")
+        }
+      } else {messageUser("could not load details. make sure they are correct")}
+    } else {messageUser("check the ??? file")}
+  }
+
+  // have all methods return a string, and allow them to throw 
+  // exceptions which can then be sent to the user
+  try for (method <- InteractionMediator.methods) {// or something like that (reflection, a method collection, etc)
+      messageUser(method)
+  } catch {
+    case e: Throwable => alertUser({
+      import java.io._
+      val s = new StringWriter
+      e.printStackTrace(new PrintWriter(s))
+      alertUser(s.toString)
+    })
+  }
+  ```
+
+
 create a web interface
 ----------------------
 - either as part of or as a subproject
@@ -17,12 +54,6 @@ redirect output of docx4j and dependencies
   logger or something else.
 
 
-DONE: optimise validateDetails' 'f' function
---------------------------------------
-- currently creating too many stack frames. Make it tail recursive, somehow.
-  - made validateDetails imperative
-
-
 Test Scenarios
 --------------
 - Test what would happen if the user provided only one column and a template
@@ -31,10 +62,6 @@ Test Scenarios
     copy of a letter, but each with a different filename. How would the
     DetailsValidator work there if it would remove the only column provided
     from the list, therefore giving it an empty list?
-
-
-Input Validation
-----------------
 - Test if user input can take special characters
 
 
