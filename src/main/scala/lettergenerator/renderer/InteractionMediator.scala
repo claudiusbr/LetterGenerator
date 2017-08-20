@@ -69,7 +69,14 @@ case class InteractionMediator() {
       validator: DetailsValidator, message: String): Unit = {
     
     var flag = false
-    try f(details) catch {
+    try {
+      for (mapElement <- details) 
+        vldt[Map[String,String]](
+          List((mapElement.values.mkString(" "),mapElement)), 
+          validator, 
+          flag = true,
+          message)
+    } catch {
       case e: Throwable => {
         gui.message("Error")
         e.printStackTrace()
@@ -77,15 +84,6 @@ case class InteractionMediator() {
       }
     }
     if(flag) loadTemplate(details)
-    
-    def f(details: List[Map[String,String]]): Unit = details match {
-      case Nil => messageUser("details list cannot be empty")
-      case x :: Nil => vldt[Map[String,String]](
-          List((x.values.mkString(" "),x)), validator, 
-            flag = true, message)
-      case x :: xs => vldt[Map[String,String]](
-          List((x.values.mkString(" "),x)), validator, f(xs), message)
-    }
   }
 
 
