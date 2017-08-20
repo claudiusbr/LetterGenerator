@@ -50,12 +50,15 @@ case class InteractionMediator() {
     val message = "Could not reach the %s. Please check if path is correct"+
       ", or report this issue"
     
-    vldt[String](paths,validator,loadDetails(),message)
+    vldt[String](
+        paths,
+        validator,
+        loadDetails(DetailsFormatter(CsvInput(gui.detailsFile))),
+        message)
   }
   
 
-  def loadDetails(): Unit = {
-    val form = DetailsFormatter(CsvInput(gui.detailsFile))
+  def loadDetails(form: DetailsFormatter): Unit = {
     val details: List[Map[String,String]] = form.details
 
     val detailsMessage = "Details file error: the row with values "+
