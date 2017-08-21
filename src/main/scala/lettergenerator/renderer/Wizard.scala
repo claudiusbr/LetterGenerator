@@ -125,8 +125,7 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
       contents += Swing.HGlue
     }
     
-    contents += Swing.VStrut(3)
-    contents += Swing.VStrut(3)
+    contents += Swing.VStrut(VShortGap)
     
     contents += new BoxPanel(Orientation.Horizontal) {
       contents += msg
