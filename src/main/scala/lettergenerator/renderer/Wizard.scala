@@ -12,7 +12,7 @@ import javax.swing.filechooser.FileNameExtensionFilter
  * @param medium an InteractionMediator object
  */
 class Wizard(medium: InteractionMediator) extends MainFrame {
-  title = "Letter Maker Wizard" 
+  title = "Letter Generator" 
   preferredSize = new Dimension(695,360)
   val TextWidth = 56
   
