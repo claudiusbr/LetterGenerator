@@ -50,11 +50,12 @@ case class InteractionMediator() {
     val message = "Could not reach the %s. Please check if path is correct"+
       ", or report this issue"
     
-    vldt[String](
-        paths,
-        validator,
-        loadDetails(DetailsFormatter(CsvInput(gui.detailsFile))),
-        message)
+    applyValidator[String](
+      paths,
+      validator,
+      loadDetails(DetailsFormatter(CsvInput(gui.detailsFile))),
+      message
+    )
   }
   
 
@@ -74,7 +75,7 @@ case class InteractionMediator() {
     var flag = false
     try {
       for (mapElement <- details) 
-        vldt[Map[String,String]](
+        applyValidator[Map[String,String]](
           List((mapElement.values.mkString(" "),mapElement)), 
           validator, 
           flag = true,
@@ -109,7 +110,7 @@ case class InteractionMediator() {
       case false => details.head.keySet.filter(_ != gui.fNameColumn)
         .map(header => (header,header)).toList
     }
-    vldt[String](headers,validator,generateLetters(details,docPack),message)
+    applyValidator[String](headers,validator,generateLetters(details,docPack),message)
   }
   
 
@@ -158,7 +159,7 @@ case class InteractionMediator() {
   }
 
   @tailrec
-  private def vldt[A](p: List[(String,A)], validator: Validator,
+  private def applyValidator[A](p: List[(String,A)], validator: Validator,
       op:  => Unit, message: String): Unit = p match {
     case Nil => 
       throw new IllegalArgumentException("argument p cannot be an empty list")
@@ -169,7 +170,7 @@ case class InteractionMediator() {
     }
 
     case x :: xs => validator.validate(x._2) match {
-      case true => vldt(xs,validator,op,message)
+      case true => applyValidator(xs,validator,op,message)
       case false => messageUser(message.format(x._1))
     }
   }
@@ -182,7 +183,7 @@ case class InteractionMediator() {
 
     var columns = List[String]()
 
-    vldt[String](path, validator, columns = DetailsFormatter(
+    applyValidator[String](path, validator, columns = DetailsFormatter(
       CsvInput(path.head._2)).details.head.keySet.toList, message)
     
     List("") ++ columns
