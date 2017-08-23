@@ -6,6 +6,7 @@ import scala.language.implicitConversions
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable
 import scala.util.matching.Regex
+import lettergenerator.Converters
 
 case class DetailsFormatter(input: Input) {
   

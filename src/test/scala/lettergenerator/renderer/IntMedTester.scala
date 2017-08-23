@@ -12,7 +12,7 @@ class IntMedTester extends FunSpec
   
   val mockFrame: Wizard = mock[Wizard]
   
-  val im = InteractionMediator()
+  val im = new InteractionMediator()
 
   describe("the registerInterface method") {
     it("should add a MainFrame ") {
@@ -36,19 +36,5 @@ class IntMedTester extends FunSpec
       Mockito.verify(mockFrame, Mockito.times(1)).visible_=(true)
     }
   }
-  
-  describe("the messageUser method") {
-    it("should call the message method from the gui") {
-      Given("a message as a string of text")
-      val msg = ""
-      
-      When("the message is passed to the method")
-      im.messageUser(msg)
-      
-      Then("the gui's message method should be called")
-      Mockito.verify(mockFrame, Mockito.times(1)).message(msg)
-    }
-  }
-
 }
 

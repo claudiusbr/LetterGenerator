@@ -2,6 +2,7 @@ package lettergenerator
 package renderer
 
 import formatter._
+import validator._
 
 import org.docx4j.XmlUtils
 import org.docx4j.wml.Document
@@ -19,7 +20,7 @@ import scala.annotation.tailrec
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-case class InteractionMediator() {
+class InteractionMediator() {
   private var gui: Wizard = _ 
   
   def registerInterface(gui: MainFrame): Unit = this.gui = gui.asInstanceOf[Wizard]
@@ -31,7 +32,7 @@ case class InteractionMediator() {
   
   def runInterface(): Unit = gui.visible = true
   
-  def messageUser(text: String): Unit = gui.message(text)
+  private def messageUser(text: String): Unit = gui.message(text)
   
 
   def submit(): Unit = {
@@ -40,7 +41,7 @@ case class InteractionMediator() {
   }
   
 
-  def validatePaths(validator: Validator ): Unit = {
+  private def validatePaths(validator: Validator ): Unit = {
     val paths = List[(String,String)](
       "details file" -> gui.detailsFile,
       "template file" -> gui.templateFile,
@@ -59,7 +60,7 @@ case class InteractionMediator() {
   }
   
 
-  def loadDetails(form: DetailsFormatter): Unit = {
+  private def loadDetails(form: DetailsFormatter): Unit = {
     val details: List[Map[String,String]] = form.details
 
     val detailsMessage = "Details file error: the row with values "+
@@ -69,7 +70,7 @@ case class InteractionMediator() {
   }
 
 
-  def validateDetails(details: List[Map[String,String]],
+  private def validateDetails(details: List[Map[String,String]],
       validator: DetailsValidator, message: String): Unit = {
     
     var flag = false
@@ -91,7 +92,7 @@ case class InteractionMediator() {
   }
 
 
-  def loadTemplate(details: List[Map[String,String]]): Unit = {
+  private def loadTemplate(details: List[Map[String,String]]): Unit = {
     val docPack: WordprocessingMLPackage = 
       TemplateFormatter(DocxInput(gui.templateFile))
         .template
@@ -100,7 +101,7 @@ case class InteractionMediator() {
   }
   
 
-  def validateTemplate(details: List[Map[String,String]], 
+  private def validateTemplate(details: List[Map[String,String]], 
       docPack: WordprocessingMLPackage): Unit = {
     val docText: String = WordMLToStringFormatter(docPack).text
     val validator = TemplateValidator(docText)
@@ -114,7 +115,7 @@ case class InteractionMediator() {
   }
   
 
-  def generateLetters(details: List[Map[String,String]],
+  private def generateLetters(details: List[Map[String,String]],
       docPack: WordprocessingMLPackage): Unit = {
     import scala.collection.JavaConverters._
 
