@@ -1,5 +1,5 @@
 package lettergenerator
-package formatter
+package validator
 
 //import scala.collection.JavaConverters._
 
