@@ -1,9 +1,6 @@
 package lettergenerator
-package formatter
 
 import scala.language.implicitConversions
-
-import java.util.{HashMap => JHashMap}
 
 object Converters {
   implicit def anyToString(what: Any): String = 
