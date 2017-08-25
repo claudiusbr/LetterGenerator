@@ -23,6 +23,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class InteractionMediator() {
   private var gui: Wizard = _ 
   
+  private val pathValidator = new PathValidator()
+  
   def registerInterface(gui: MainFrame): Unit = this.gui = gui.asInstanceOf[Wizard]
 
   def hasGui: Boolean = Option[MainFrame](gui) match {
@@ -37,11 +39,11 @@ class InteractionMediator() {
 
   def submit(): Unit = {
     messageUser("Processing...")
-    Future { validatePaths(PathValidator()) }
+    Future { validatePaths() }
   }
   
 
-  private def validatePaths(validator: Validator ): Unit = {
+  private def validatePaths(): Unit = {
     val paths = List[(String,String)](
       "details file" -> gui.detailsFile,
       "template file" -> gui.templateFile,
@@ -51,11 +53,12 @@ class InteractionMediator() {
     val message = "Could not reach the %s. Please check if path is correct"+
       ", or report this issue"
     
-    applyValidator[String](
+    val k: String => Unit = messageUser(_)
+    
+    pathValidator.applyValidator[String](
       paths,
-      validator,
       loadDetails(DetailsFormatter(CsvInput(gui.detailsFile))),
-      message
+      k
     )
   }
   
@@ -121,7 +124,7 @@ class InteractionMediator() {
 
     val destination: String = gui.destinationFolder
     val template: MainDocumentPart = docPack.getMainDocumentPart
-    val duplFileChecker = PathValidator()
+    val duplFileChecker = new PathValidator()
 
     @tailrec
     def fileName(name: String, counter: Int): String = {
@@ -177,15 +180,14 @@ class InteractionMediator() {
   }
   
   def columnsForFileName(): List[String] = {
-    val path: List[(String,String)] = List(("details file", gui.detailsFile))
-    val validator = PathValidator()
     val message = "Could not reach the %s. Please check if path is correct"+
       ", or report this issue"
+    val path: List[(String,String)] = List((message.format("details file"), gui.detailsFile))
 
     var columns = List[String]()
 
-    applyValidator[String](path, validator, columns = DetailsFormatter(
-      CsvInput(path.head._2)).details.head.keySet.toList, message)
+    pathValidator.applyValidator[String](path, columns = DetailsFormatter(
+      CsvInput(path.head._2)).details.head.keySet.toList, messageUser(_))
     
     List("") ++ columns
 

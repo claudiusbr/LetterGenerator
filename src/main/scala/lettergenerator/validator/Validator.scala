@@ -1,24 +1,10 @@
 package lettergenerator
 package validator
 
-//import scala.collection.JavaConverters._
-
 import scala.language.implicitConversions
 
 trait Validator {
   def validate(what: Any): Boolean
-}
-
-case class PathValidator() extends Validator {
-  import java.nio.file.{Paths,Files}
-  import Converters.anyToString
-  
-  def validate(what: Any): Boolean = validatePath(what)
-
-  def validatePath(path: String): Boolean = {
-    if (path.nonEmpty) Files.exists(Paths.get(path))
-    else false
-  }
 }
 
 case class DetailsValidator(headers: Array[String]) extends Validator {
