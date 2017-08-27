@@ -1,6 +1,8 @@
 package lettergenerator
 package formatter
 
+import loader._
+
 import scala.language.implicitConversions
 
 import scala.collection.mutable.ListBuffer

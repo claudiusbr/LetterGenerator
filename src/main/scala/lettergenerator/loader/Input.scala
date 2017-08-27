@@ -1,5 +1,5 @@
 package lettergenerator
-package formatter
+package loader
 
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 

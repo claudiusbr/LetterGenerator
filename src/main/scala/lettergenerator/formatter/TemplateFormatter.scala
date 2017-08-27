@@ -3,6 +3,7 @@ package formatter
 
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
+import loader._
 
 case class TemplateFormatter(input: Input) {
   

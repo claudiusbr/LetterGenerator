@@ -3,6 +3,7 @@ package renderer
 
 import formatter._
 import validator._
+import loader._
 
 import org.docx4j.XmlUtils
 import org.docx4j.wml.Document
@@ -55,11 +56,8 @@ class InteractionMediator() {
     
     val k: String => Unit = messageUser(_)
     
-    pathValidator.applyValidator[String](
-      paths,
-      loadDetails(DetailsFormatter(CsvInput(gui.detailsFile))),
-      k
-    )
+    pathValidator.applyValidator[String]( paths,
+      loadDetails(DetailsFormatter(CsvInput(gui.detailsFile))), k)
   }
   
 
