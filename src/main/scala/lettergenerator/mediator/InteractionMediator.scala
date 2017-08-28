@@ -1,27 +1,29 @@
 package lettergenerator
-package renderer
+package mediator
 
 import formatter._
+
 import validator._
 import loader._
+import renderer.Wizard
 
 import org.docx4j.XmlUtils
 import org.docx4j.wml.Document
-import org.docx4j.jaxb.Context
 import org.docx4j.openpackaging.io.SaveToZipFile
-import org.docx4j.openpackaging.packages.WordprocessingMLPackage  
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
 
 import scala.swing.MainFrame
-
-import java.util.{HashMap => JHashMap}
 
 import scala.annotation.tailrec
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class InteractionMediator() {
+
+import java.util.{HashMap => JHashMap}
+
+class InteractionMediator extends renderer.Interactor {
   private var gui: Wizard = _ 
   
   private val pathValidator = new PathValidator()
@@ -177,7 +179,7 @@ class InteractionMediator() {
     }
   }
   
-  def columnsForFileName(): List[String] = {
+  def detailsFileHeaders(): List[String] = {
     val message = "Could not reach the %s. Please check if path is correct"+
       ", or report this issue"
     val path: List[(String,String)] = List((message.format("details file"), gui.detailsFile))
@@ -188,8 +190,5 @@ class InteractionMediator() {
       CsvInput(path.head._2)).details.head.keySet.toList, messageUser(_))
     
     List("") ++ columns
-
   }
-  
-  
 }

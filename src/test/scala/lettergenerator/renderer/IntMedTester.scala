@@ -1,11 +1,12 @@
 package lettergenerator
-package renderer
-
+package mediator
 
 import org.scalatest.{FunSpec, GivenWhenThen}
 import org.mockito.Mockito.when
 import org.mockito.Mockito
 import org.scalatest.mockito.MockitoSugar
+
+import renderer.Wizard
 
 class IntMedTester extends FunSpec 
   with GivenWhenThen with MockitoSugar{

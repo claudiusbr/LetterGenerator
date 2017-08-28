@@ -9,9 +9,9 @@ import javax.swing.filechooser.FileNameExtensionFilter
 
 /**
  * the main frame. Responsible for laying out the elements
- * @param medium an InteractionMediator object
+ * @param medium an Interactor object
  */
-class Wizard(medium: InteractionMediator) extends MainFrame {
+class Wizard(medium: Interactor) extends MainFrame {
   title = "Letter Generator" 
   preferredSize = new Dimension(695,360)
   val TextWidth = 56
@@ -151,7 +151,7 @@ class Wizard(medium: InteractionMediator) extends MainFrame {
     if (dtTxt.text != textChangeFlag) {
       fileNameColumn.peer.setModel(
           ComboBox.newConstantModel(
-              medium.columnsForFileName()))
+              medium.detailsFileHeaders()))
       textChangeFlag = dtTxt.text
       fileNameColumn.selection.item = ""
       
