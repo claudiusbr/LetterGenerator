@@ -4,12 +4,10 @@ import lettergenerator._
 import validators._
 
 class ValidationMediator(gui: renderer.Wizard) extends UserMessenger(gui) {
-  private val pathValidator = new PathValidator()
-  
   val pathMessage = "Could not reach the %s. Please check if path is correct"+
     ", or report this issue"
     
-  def detailsPathIfValid(): String = {
+  def detailsPathIfValid(pathValidator: Validator): String = {
     val detailsFilePath: String = gui.detailsFile
     pathValidator.validate(detailsFilePath) match {
       case false => throw new Exception(pathMessage.format(detailsFilePath))
@@ -17,7 +15,7 @@ class ValidationMediator(gui: renderer.Wizard) extends UserMessenger(gui) {
     }
   }
 
-  def validateAllPaths(): Unit = {
+  def validateAllPaths(pathValidator: RecursiveValidator): Unit = {
     val paths = List[(String,String)](
       "details file" -> gui.detailsFile,
       "template file" -> gui.templateFile,
