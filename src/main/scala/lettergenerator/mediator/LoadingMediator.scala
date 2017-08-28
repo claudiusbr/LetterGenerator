@@ -1,5 +1,11 @@
-package lettergenerator.mediator
+package lettergenerator
+package mediator
 
-class LoadingMediator {
-  
+import loader._
+import formatter._
+
+class LoadingMediator(gui: renderer.Wizard) {
+
+  def loadDetails(): Unit = {
+  }
 }

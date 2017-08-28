@@ -1,4 +1,5 @@
-package lettergenerator.validator
+package lettergenerator
+package validators
 
 import scala.annotation.tailrec
 

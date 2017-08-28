@@ -1,5 +1,5 @@
 package lettergenerator
-package validator
+package validators
 
 class TemplateValidator(text: String) extends RecursiveValidator {
   def validate(what: Any): Boolean = {

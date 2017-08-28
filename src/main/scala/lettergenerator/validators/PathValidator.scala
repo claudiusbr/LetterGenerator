@@ -1,5 +1,5 @@
 package lettergenerator
-package validator
+package validators
 
 import scala.language.implicitConversions
 

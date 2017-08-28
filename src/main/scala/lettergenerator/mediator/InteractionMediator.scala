@@ -2,8 +2,6 @@ package lettergenerator
 package mediator
 
 import formatter._
-
-import validator._
 import loader._
 import renderer.Wizard
 
@@ -25,9 +23,16 @@ import java.util.{HashMap => JHashMap}
 
 class InteractionMediator extends renderer.Interactor {
   private var gui: Wizard = _ 
-  private val pathValidator = new PathValidator()
+  private var validator: ValidationMediator = _
+  private var loader: LoadingMediator = _
+  private var generator: DocxMaker = _
   
-  def registerInterface(gui: MainFrame): Unit = this.gui = gui.asInstanceOf[Wizard]
+  def registerInterface(gui: MainFrame): Unit = {
+    this.gui = gui.asInstanceOf[Wizard]
+    validator = new ValidationMediator(this.gui)
+    loader = new LoadingMediator(this.gui)         
+    generator = new DocxMaker(this.gui)            
+  }
 
   def hasGui: Boolean = Option[MainFrame](gui) match {
     case Some(_) => true
@@ -42,37 +47,24 @@ class InteractionMediator extends renderer.Interactor {
 
   def submit(): Unit = {
     messageUser("Processing...")
-    Future { validatePaths() }
+    Future { 
+      validator.validateAllPaths() 
+      loadDetails(DetailsFormatter(CsvInput(gui.detailsFile)))
+    }
   }
   
-
-  private def validatePaths(): Unit = {
-    val paths = List[(String,String)](
-      "details file" -> gui.detailsFile,
-      "template file" -> gui.templateFile,
-      "destination folder" -> gui.destinationFolder
-    )
-
-    val message = "Could not reach the %s. Please check if path is correct"+
-      ", or report this issue"
-    
-    pathValidator.applyRecursion[String]( paths,
-      loadDetails(DetailsFormatter(CsvInput(gui.detailsFile))), messageUser)
-  }
-  
-
   private def loadDetails(form: DetailsFormatter): Unit = {
     val details: List[Map[String,String]] = form.details
 
     val detailsMessage = "Details file error: the row with values "+
       "%s is incomplete. Please check it and try again" 
       
-    validateDetails(details,new DetailsValidator(form.headers), detailsMessage)
+    validateDetails(details,new validators.DetailsValidator(form.headers), detailsMessage)
   }
 
 
   private def validateDetails(details: List[Map[String,String]],
-    validator: DetailsValidator, message: String): Unit = {
+    validator: validators.DetailsValidator, message: String): Unit = {
     
     var flag = false
     try {
@@ -106,7 +98,7 @@ class InteractionMediator extends renderer.Interactor {
   private def validateTemplate(details: List[Map[String,String]], 
     docPack: WordprocessingMLPackage): Unit = {
     val docText: String = WordMLToStringFormatter(docPack).text
-    val validator = new TemplateValidator(docText)
+    val validator = new validators.TemplateValidator(docText)
     val message: String = "Error: could not find variable %s on template."
     val headers: List[(String,String)] = gui.fnAlsoInTemplate match {
       case true => details.head.keySet.map(header => (header,header)).toList
@@ -132,7 +124,7 @@ class InteractionMediator extends renderer.Interactor {
 
     val destination: String = gui.destinationFolder
     val template: MainDocumentPart = docPack.getMainDocumentPart
-    val duplFileChecker = new PathValidator()
+    val duplFileChecker = new validators.PathValidator()
 
     @tailrec
     def fileName(name: String, counter: Int): String = {
@@ -169,15 +161,14 @@ class InteractionMediator extends renderer.Interactor {
   }
   
   def detailsFileHeaders(): List[String] = {
-    val message = "Could not reach the %s. Please check if path is correct"+
-      ", or report this issue"
-    val path: List[(String,String)] = List((message.format("details file"), gui.detailsFile))
-
-    var columns = List[String]()
-
-    pathValidator.applyRecursion[String](path, columns = DetailsFormatter(
-      CsvInput(path.head._2)).details.head.keySet.toList, messageUser(_))
-    
-    List("") ++ columns
+    try {
+      val path = validator.detailsPathIfValid() 
+      DetailsFormatter(CsvInput(path)).details.head.keySet.toList
+    } catch {
+      case e: Throwable => {
+        gui.message(e.getLocalizedMessage)
+        throw e
+      }
+    }
   }
 }

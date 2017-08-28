@@ -1,5 +1,5 @@
 package lettergenerator
-package validator
+package validators
 
 trait Validator {
   def validate(what: Any): Boolean
