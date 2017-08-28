@@ -3,11 +3,20 @@ package validator
 
 import scala.language.implicitConversions
 
-case class DetailsValidator(headers: Array[String]) extends Validator {
+/**
+ * This class is responsible for validating the details file
+ * @param headers an array containing the column headers of the details	file
+ */
+class DetailsValidator(headers: Array[String]) extends RecursiveValidator {
   import Converters.anyToDetMap  
 
-  def validate(what: Any): Boolean = validateDetailsNotEmpty(what)
+  override def validate(what: Any): Boolean = validateDetailsNotEmpty(what)
 
+  /**
+   * This method iterates through the details' file tuples and
+   * asserts that there are no empty values 
+   * @param details a map of all the values to be checked
+   */
   def validateDetailsNotEmpty(details: Map[String,String]): Boolean = {
     for (header <- headers) 
       if(!details.keySet.contains(header)) return false

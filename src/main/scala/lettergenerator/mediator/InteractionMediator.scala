@@ -25,7 +25,6 @@ import java.util.{HashMap => JHashMap}
 
 class InteractionMediator extends renderer.Interactor {
   private var gui: Wizard = _ 
-  
   private val pathValidator = new PathValidator()
   
   def registerInterface(gui: MainFrame): Unit = this.gui = gui.asInstanceOf[Wizard]
@@ -37,7 +36,8 @@ class InteractionMediator extends renderer.Interactor {
   
   def runInterface(): Unit = gui.visible = true
   
-  private def messageUser(text: String): Unit = gui.message(text)
+  //private def messageUser(text: String): Unit = gui.message(text)
+  private val messageUser: String => Unit = (text: String) => gui.message(text)
   
 
   def submit(): Unit = {
@@ -56,10 +56,8 @@ class InteractionMediator extends renderer.Interactor {
     val message = "Could not reach the %s. Please check if path is correct"+
       ", or report this issue"
     
-    val k: String => Unit = messageUser(_)
-    
-    pathValidator.applyValidator[String]( paths,
-      loadDetails(DetailsFormatter(CsvInput(gui.detailsFile))), k)
+    pathValidator.applyRecursion[String]( paths,
+      loadDetails(DetailsFormatter(CsvInput(gui.detailsFile))), messageUser)
   }
   
 
@@ -69,26 +67,27 @@ class InteractionMediator extends renderer.Interactor {
     val detailsMessage = "Details file error: the row with values "+
       "%s is incomplete. Please check it and try again" 
       
-    validateDetails(details,DetailsValidator(form.headers), detailsMessage)
+    validateDetails(details,new DetailsValidator(form.headers), detailsMessage)
   }
 
 
   private def validateDetails(details: List[Map[String,String]],
-      validator: DetailsValidator, message: String): Unit = {
+    validator: DetailsValidator, message: String): Unit = {
     
     var flag = false
     try {
       for (mapElement <- details) 
-        applyValidator[Map[String,String]](
+        validator.applyRecursion[Map[String,String]](
           List((mapElement.values.mkString(" "),mapElement)), 
-          validator, 
           flag = true,
-          message)
+          (msg: String) => throw new Exception(
+              "row containing '%s' has a missing value".format(msg)))
     } catch {
       case e: Throwable => {
         gui.message("Error")
         e.printStackTrace()
-        gui.alert(e.getStackTrace.mkString("\n"))
+        //gui.alert(e.getStackTrace.mkString("\n"))
+        gui.alert(e.getLocalizedMessage)
       }
     }
     if(flag) loadTemplate(details)
@@ -186,7 +185,7 @@ class InteractionMediator extends renderer.Interactor {
 
     var columns = List[String]()
 
-    pathValidator.applyValidator[String](path, columns = DetailsFormatter(
+    pathValidator.applyRecursion[String](path, columns = DetailsFormatter(
       CsvInput(path.head._2)).details.head.keySet.toList, messageUser(_))
     
     List("") ++ columns
