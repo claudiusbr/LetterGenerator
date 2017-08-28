@@ -1,7 +1,7 @@
 package lettergenerator
 package validator
 
-case class TemplateValidator(text: String) extends Validator {
+class TemplateValidator(text: String) extends RecursiveValidator {
   def validate(what: Any): Boolean = {
     val detailsHeader = what.asInstanceOf[String]
     validateVariables(detailsHeader)

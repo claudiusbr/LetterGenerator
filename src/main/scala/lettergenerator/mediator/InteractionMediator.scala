@@ -104,21 +104,30 @@ class InteractionMediator extends renderer.Interactor {
   
 
   private def validateTemplate(details: List[Map[String,String]], 
-      docPack: WordprocessingMLPackage): Unit = {
+    docPack: WordprocessingMLPackage): Unit = {
     val docText: String = WordMLToStringFormatter(docPack).text
-    val validator = TemplateValidator(docText)
+    val validator = new TemplateValidator(docText)
     val message: String = "Error: could not find variable %s on template."
     val headers: List[(String,String)] = gui.fnAlsoInTemplate match {
       case true => details.head.keySet.map(header => (header,header)).toList
       case false => details.head.keySet.filter(_ != gui.fNameColumn)
         .map(header => (header,header)).toList
     }
-    applyValidator[String](headers,validator,generateLetters(details,docPack),message)
+    try{
+      validator.applyRecursion[String](
+        headers,generateLetters(details,docPack),
+        (msg: String) => throw new Exception(msg))
+    } catch {
+      case e: Throwable => {
+        e.printStackTrace()
+        messageUser(message.format(e.getLocalizedMessage))
+      }
+    }
   }
   
 
   private def generateLetters(details: List[Map[String,String]],
-      docPack: WordprocessingMLPackage): Unit = {
+    docPack: WordprocessingMLPackage): Unit = {
     import scala.collection.JavaConverters._
 
     val destination: String = gui.destinationFolder
@@ -156,26 +165,7 @@ class InteractionMediator extends renderer.Interactor {
       new SaveToZipFile(docPack).save(s"${fileName(fname,0)}")
       template.setJaxbElement(jaxbElement)
     }
-
     messageUser("Done!")
-
-  }
-
-  @tailrec
-  private def applyValidator[A](p: List[(String,A)], validator: Validator,
-      op:  => Unit, message: String): Unit = p match {
-    case Nil => 
-      throw new IllegalArgumentException("argument p cannot be an empty list")
-
-    case x :: Nil => validator.validate(x._2) match {
-      case true => op
-      case false => messageUser(message.format(x._1))
-    }
-
-    case x :: xs => validator.validate(x._2) match {
-      case true => applyValidator(xs,validator,op,message)
-      case false => messageUser(message.format(x._1))
-    }
   }
   
   def detailsFileHeaders(): List[String] = {
