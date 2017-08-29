@@ -4,27 +4,42 @@ import lettergenerator._
 import validators._
 
 class ValidationMediator(gui: renderer.Wizard) extends UserMessenger(gui) {
+  private val pathValidator = new PathValidator()
   val pathMessage = "Could not reach the %s. Please check if path is correct"+
     ", or report this issue"
     
-  def detailsPathIfValid(pathValidator: Validator): String = {
-    val detailsFilePath: String = gui.detailsFile
-    pathValidator.validate(detailsFilePath) match {
-      case false => throw new Exception(pathMessage.format(detailsFilePath))
-      case true => detailsFilePath
+  def validatePath(path: String, pathValidator: Validator = pathValidator): Option[String] = {
+    pathValidator.validate(path) match {
+      case true => Some(path)
+      case false => None
+    }
+  }
+  
+  def validatePathOrThrow(path: String, pathValidator: Validator = pathValidator): String = {
+    validatePath(path,pathValidator) match {
+      case Some(e: String) => e
+      case None => {
+        val tellUser = pathMessage.format(path)
+        messageUser(tellUser)
+        throw new Exception(tellUser)
+      }
     }
   }
 
-  def validateAllPaths(pathValidator: RecursiveValidator): Unit = {
+  def validateAllPaths(pathValidator: RecursiveValidator = pathValidator): Unit = {
     val paths = List[(String,String)](
       "details file" -> gui.detailsFile,
       "template file" -> gui.templateFile,
       "destination folder" -> gui.destinationFolder
     )
 
-    pathValidator.applyRecursion[String]( paths,
-      messageUser("File paths validated"), 
-      (msg: String) => throw new Exception(pathMessage.format(msg)))
+    pathValidator.applyRecursion[String](
+        paths, messageUser("File paths validated"), 
+        (msg: String) => { 
+          val tellUser = pathMessage.format(msg) 
+          messageUser(tellUser) 
+          throw new Exception(tellUser) 
+        })
   } 
   
 }

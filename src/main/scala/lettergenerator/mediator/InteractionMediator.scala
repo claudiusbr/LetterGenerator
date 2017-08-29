@@ -48,7 +48,7 @@ class InteractionMediator extends renderer.Interactor {
   def submit(): Unit = {
     messageUser("Processing...")
     Future { 
-      validator.validateAllPaths() 
+      validator.validateAllPaths()
       loadDetails(DetailsFormatter(CsvInput(gui.detailsFile)))
     }
   }
@@ -124,16 +124,19 @@ class InteractionMediator extends renderer.Interactor {
 
     val destination: String = gui.destinationFolder
     val template: MainDocumentPart = docPack.getMainDocumentPart
-    val duplFileChecker = new validators.PathValidator()
+    val duplFileChecker = validator
 
     @tailrec
     def fileName(name: String, counter: Int): String = {
       val increment = counter + 1
-      if (duplFileChecker.validate(destination+"/"+name+".docx")) {
-        if (duplFileChecker.validate(destination+"/"+name+increment+".docx")) 
-          fileName(name,increment)
-        else destination+"/"+name+increment+".docx"
-      } else destination+"/"+name+".docx"
+      duplFileChecker.validatePath(destination+"/"+name+".docx") match {
+        case Some(_) => 
+          duplFileChecker.validatePath(destination+"/"+name+increment+".docx") match {
+            case Some(_) => fileName(name,increment)
+            case None => destination+"/"+name+increment+".docx"
+          }
+        case None => destination+"/"+name+".docx"
+      }
     }
 
     for(smap <- details) {
@@ -161,14 +164,8 @@ class InteractionMediator extends renderer.Interactor {
   }
   
   def detailsFileHeaders(): List[String] = {
-    try {
-      val path = validator.detailsPathIfValid() 
-      DetailsFormatter(CsvInput(path)).details.head.keySet.toList
-    } catch {
-      case e: Throwable => {
-        gui.message(e.getLocalizedMessage)
-        throw e
-      }
-    }
+    DetailsFormatter(
+      CsvInput(validator.validatePathOrThrow(gui.detailsFile)))
+        .details.head.keySet.toList
   }
 }
