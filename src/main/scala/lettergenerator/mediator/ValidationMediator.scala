@@ -1,11 +1,11 @@
-package lettergenerator.mediator
+package lettergenerator
+package mediator
 
-import lettergenerator._
 import validators._
 
 class ValidationMediator(gui: renderer.Wizard) extends UserMessenger(gui) {
   private val pathValidator = new PathValidator()
-  val pathMessage = "Could not reach the %s. Please check if path is correct"+
+  private val pathMessage = "Could not reach the %s. Please check if path is correct"+
     ", or report this issue"
     
   def validatePath(path: String, pathValidator: Validator = pathValidator): Option[String] = {

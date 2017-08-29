@@ -1,17 +1,17 @@
 package lettergenerator
 package mediator
 
+import renderer.Wizard
+
 import org.scalatest.{FunSpec, GivenWhenThen}
 import org.mockito.Mockito.when
 import org.mockito.Mockito
 import org.scalatest.mockito.MockitoSugar
 
-import renderer.Wizard
-
 class IntMedTester extends FunSpec 
-  with GivenWhenThen with MockitoSugar{
+  with GivenWhenThen with MockitoSugar {
   
-  val mockFrame: Wizard = mock[Wizard]
+  val mockGui: Wizard = mock[Wizard]
   
   val im = new InteractionMediator()
 
@@ -21,7 +21,7 @@ class IntMedTester extends FunSpec
       assert(im.hasGui == false)
 
       When("registerInterface is called with the right parameters")
-      im.registerInterface(mockFrame)
+      im.registerInterface(mockGui)
 
       Then("it should save a reference to the given GUI")
       assert(im.hasGui == true)
@@ -34,7 +34,7 @@ class IntMedTester extends FunSpec
       im.runInterface()
       
       Then("the frame should become visible")
-      Mockito.verify(mockFrame, Mockito.times(1)).visible_=(true)
+      Mockito.verify(mockGui, Mockito.times(1)).visible_=(true)
     }
   }
 }
