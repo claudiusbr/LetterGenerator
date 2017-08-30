@@ -32,9 +32,8 @@ class ValMedTester extends FunSpec
   describe("the validatePath method") {
     it("should return Some") {
       Given("a path that exists")
-
       Then("it returns Some(path)")
-      assert(vm.validatePath(path, mockPathValidator).get == "./valid/path")
+      assert(vm.validatePath(path, mockPathValidator).get == path)
     }
     
     it("should return None") {
@@ -48,15 +47,15 @@ class ValMedTester extends FunSpec
     it("should return the path String") {
       Given("a path which exists")
       Then("it should return return the path")
-      assert(false)
+      assert(vm.validatePathOrThrow(path,mockPathValidator) == path)
     }
     
     it("should throw an exception") {
       Given("a path which does not exist")
-      Then("it should message the user")
-      assert(false)
-      And("it should throw an exception")
-      assert(false)
+      Then("it should throw an exception")
+      assertThrows[Exception](vm.validatePathOrThrow(otherPath,mockPathValidator))
+      And("it should message the user")
+      Mockito.verify(mockGui,Mockito.times(1)).message(Matchers.anyString())
     }
   }
   
