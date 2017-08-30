@@ -36,14 +36,6 @@ class ValidationMediator(gui: renderer.Wizard) {
 
     paths.foreach(element => validatePathOrThrow(element, pathValidator))
     gui.message("File paths validated")
-    
-   /* pathValidator.applyRecursion[String](
-      paths, gui.message("File paths validated"), 
-      (msg: String) => { 
-        val tellUser = pathMessage.format(msg) 
-        gui.message(tellUser) 
-        throw new Exception(tellUser) 
-      })*/
   } 
   
 }
