@@ -165,7 +165,7 @@ class InteractionMediator extends renderer.Interactor {
   
   def detailsFileHeaders(): List[String] = {
     DetailsFormatter(
-      CsvInput(validator.validatePathOrThrow(gui.detailsFile)))
+      CsvInput(validator.validatePathOrThrow(("details file",gui.detailsFile))))
         .details.head.keySet.toList
   }
 }

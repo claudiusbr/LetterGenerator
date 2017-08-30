@@ -3,7 +3,7 @@ package mediator
 
 import validators._
 
-class ValidationMediator(gui: renderer.Wizard) extends UserMessenger(gui) {
+class ValidationMediator(gui: renderer.Wizard) {
   private val pathValidator = new PathValidator()
   private val pathMessage = "Could not reach the %s. Please check if path is correct"+
     ", or report this issue"
@@ -15,12 +15,13 @@ class ValidationMediator(gui: renderer.Wizard) extends UserMessenger(gui) {
     }
   }
   
-  def validatePathOrThrow(path: String, pathValidator: Validator = pathValidator): String = {
-    validatePath(path,pathValidator) match {
+  def validatePathOrThrow(path: (String,String), 
+    pathValidator: Validator = pathValidator): String = {
+    validatePath(path._2,pathValidator) match {
       case Some(e: String) => e
       case None => {
-        val tellUser = pathMessage.format(path)
-        messageUser(tellUser)
+        val tellUser = pathMessage.format(path._1)
+        gui.message(tellUser)
         throw new Exception(tellUser)
       }
     }
@@ -33,13 +34,16 @@ class ValidationMediator(gui: renderer.Wizard) extends UserMessenger(gui) {
       "destination folder" -> gui.destinationFolder
     )
 
-    pathValidator.applyRecursion[String](
-        paths, messageUser("File paths validated"), 
-        (msg: String) => { 
-          val tellUser = pathMessage.format(msg) 
-          messageUser(tellUser) 
-          throw new Exception(tellUser) 
-        })
+    paths.foreach(element => validatePathOrThrow(element, pathValidator))
+    gui.message("File paths validated")
+    
+   /* pathValidator.applyRecursion[String](
+      paths, gui.message("File paths validated"), 
+      (msg: String) => { 
+        val tellUser = pathMessage.format(msg) 
+        gui.message(tellUser) 
+        throw new Exception(tellUser) 
+      })*/
   } 
   
 }
