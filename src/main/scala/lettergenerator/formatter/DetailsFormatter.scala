@@ -39,7 +39,7 @@ case class DetailsFormatter(input: Input) {
     det.toList
   }
   
-  def replCommas(text: String): String = {
+  private def replCommas(text: String): String = {
     // this is needed to avoid wrong splitting of any line
     val commaInText: Regex = "(.*\".*),(.*\".*)".r
 
