@@ -7,7 +7,7 @@ import scala.language.implicitConversions
  * This class is responsible for validating the details file
  * @param headers an array containing the column headers of the details	file
  */
-class DetailsValidator(headers: Array[String]) extends RecursiveValidator {
+case class DetailsValidator(headers: Array[String]) extends RecursiveValidator {
   import Converters.anyToDetMap  
 
   override def validate(what: Any): Boolean = validateDetailsNotEmpty(what)

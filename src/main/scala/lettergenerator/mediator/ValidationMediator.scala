@@ -4,10 +4,8 @@ package mediator
 import validators._
 
 class ValidationMediator(gui: renderer.Wizard) {
+  private val errorMsgs = ErrorMessageFactory
   private val pathValidator = new PathValidator()
-  private val pathMessage = "Could not reach the %s. Please check if path is correct"+
-    ", or report this issue"
-    
   def validatePath(path: String, pathValidator: Validator = pathValidator): Option[String] = {
     pathValidator.validate(path) match {
       case true => Some(path)
@@ -20,7 +18,7 @@ class ValidationMediator(gui: renderer.Wizard) {
     validatePath(path._2,pathValidator) match {
       case Some(e: String) => e
       case None => {
-        val tellUser = pathMessage.format(path._1)
+        val tellUser = errorMsgs(pathValidator).format(path._1)
         gui.message(tellUser)
         throw new Exception(tellUser)
       }
