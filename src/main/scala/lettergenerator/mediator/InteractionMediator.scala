@@ -159,7 +159,8 @@ class InteractionMediator extends renderer.Interactor {
   }
   
   def detailsFileHeaders(): List[String] = {
-    DetailsFormatter(
+    val allowEmptyFileName = List(" ")
+    allowEmptyFileName ++ DetailsFormatter(
       CsvInput(validator.validatePathOrThrow(("details file",gui.detailsFile))))
         .details.head.keySet.toList
   }
