@@ -41,7 +41,6 @@ class InteractionMediator extends renderer.Interactor {
   
   def runInterface(): Unit = gui.visible = true
   
-  //private def messageUser(text: String): Unit = gui.message(text)
   private val messageUser: String => Unit = (text: String) => gui.message(text)
   
 
@@ -49,7 +48,6 @@ class InteractionMediator extends renderer.Interactor {
     messageUser("Processing...")
     Future { 
       validator.validateAllPaths()
-      //loadDetails(DetailsFormatter(CsvInput(gui.detailsFile)))
       val details = loader.loadDetails()
 
       val detailsMessage = "Details file error: the row with values "+
@@ -76,7 +74,6 @@ class InteractionMediator extends renderer.Interactor {
       case e: Throwable => {
         gui.message("Error")
         e.printStackTrace()
-        //gui.alert(e.getStackTrace.mkString("\n"))
         gui.alert(e.getLocalizedMessage)
       }
     }
