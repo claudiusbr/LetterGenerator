@@ -19,12 +19,13 @@ class LoadMedTester extends FunSpec
   val validDetailsPath = "./valid/path"
   
   val detailsList: List[Map[String,String]] = List(
-    Map("name" -> "Inigo Montoya", 
-      "action" -> "you killed my father",
-      "consequence" -> "prepare to die"),
-    Map("name" -> "Juan Pablo Montoya",
-        "action" -> "you broke my car",
-        "consequence" -> "prepare to pay"))
+    Map("name" -> "The Quick Brown Fox", 
+      "action" -> "Jumped Over The Lazy Dog",
+      "consequence" -> "+35XP"),
+
+    Map("name" -> "The Lazy Dog",
+        "action" -> "Was Jumped Over By The Quick Brown Fox",
+        "consequence" -> "Had To Re-evaluate His Life Choices"))
 
   when(mockGui.detailsFile).thenReturn(validDetailsPath)
   
@@ -33,8 +34,18 @@ class LoadMedTester extends FunSpec
   describe("the loadDetails method") {
     it("does what it says on the tin") {
       Given("a valid path to a csv file containing the details")
+      When("the method is called")
       Then("it returns the data from the details file")
       assert(lm.loadDetails(mockDetailsFormatter) == detailsList)
+    }
+  }
+  
+  describe("the loadTemplate method") {
+    it("loads a docx template") {
+      Given("a valid WordML formatter with a docx template file path")
+      When("the method is called")
+      Then("it returns a string with the contents of the ")
+      assert(false)
     }
   }
 

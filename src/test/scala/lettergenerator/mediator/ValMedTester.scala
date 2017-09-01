@@ -52,10 +52,14 @@ class ValMedTester extends FunSpec
     
     it("should throw an exception") {
       Given("a path which does not exist")
+
       Then("it should throw an exception")
-      assertThrows[Exception](vm.validatePathOrThrow(("not valid",otherPath),mockPathValidator))
+      assertThrows[Exception](
+        vm.validatePathOrThrow(("not valid",otherPath),mockPathValidator))
+
       And("it should message the user")
-      Mockito.verify(mockGui,Mockito.times(1)).message(Matchers.anyString())
+      Mockito.verify(mockGui,Mockito.times(1))
+        .message(Matchers.anyString())
     }
   }
   
