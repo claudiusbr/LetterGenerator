@@ -49,20 +49,18 @@ class InteractionMediator extends renderer.Interactor {
     messageUser("Processing...")
     Future { 
       validator.validateAllPaths()
-      loadDetails(DetailsFormatter(CsvInput(gui.detailsFile)))
+      //loadDetails(DetailsFormatter(CsvInput(gui.detailsFile)))
+      val details = loader.loadDetails()
+
+      val detailsMessage = "Details file error: the row with values "+
+        "%s is incomplete. Please check it and try again" 
+
+      validateDetails(details,new validators.DetailsValidator(
+        DetailsFormatter(CsvInput(gui.detailsFile)).headers)
+          , detailsMessage)
     }
   }
   
-  private def loadDetails(form: DetailsFormatter): Unit = {
-    val details: List[Map[String,String]] = form.details
-
-    val detailsMessage = "Details file error: the row with values "+
-      "%s is incomplete. Please check it and try again" 
-      
-    validateDetails(details,new validators.DetailsValidator(form.headers), detailsMessage)
-  }
-
-
   private def validateDetails(details: List[Map[String,String]],
     validator: validators.DetailsValidator, message: String): Unit = {
     
