@@ -27,6 +27,9 @@ class InteractionMediator extends renderer.Interactor {
   private var loader: LoadingMediator = _
   private var generator: DocxMaker = _
   
+  private val messageUser: String => Unit = (text: String) => gui.message(text)
+  
+
   def registerInterface(gui: MainFrame): Unit = {
     this.gui = gui.asInstanceOf[Wizard]
     validator = new ValidationMediator(this.gui)
@@ -41,9 +44,6 @@ class InteractionMediator extends renderer.Interactor {
   
   def runInterface(): Unit = gui.visible = true
   
-  private val messageUser: String => Unit = (text: String) => gui.message(text)
-  
-
   def submit(): Unit = {
     messageUser("Processing...")
     Future { 
@@ -57,6 +57,13 @@ class InteractionMediator extends renderer.Interactor {
         DetailsFormatter(CsvInput(gui.detailsFile)).headers)
           , detailsMessage)
     }
+  }
+  
+  def detailsFileHeaders(): List[String] = {
+    val allowEmptyFileName = List(" ")
+    allowEmptyFileName ++ DetailsFormatter(
+      CsvInput(validator.validatePathOrThrow(("details file",gui.detailsFile))))
+        .details.head.keySet.toList
   }
   
   private def validateDetails(details: List[Map[String,String]],
@@ -153,12 +160,5 @@ class InteractionMediator extends renderer.Interactor {
       template.setJaxbElement(jaxbElement)
     }
     messageUser("Done!")
-  }
-  
-  def detailsFileHeaders(): List[String] = {
-    val allowEmptyFileName = List(" ")
-    allowEmptyFileName ++ DetailsFormatter(
-      CsvInput(validator.validatePathOrThrow(("details file",gui.detailsFile))))
-        .details.head.keySet.toList
   }
 }
