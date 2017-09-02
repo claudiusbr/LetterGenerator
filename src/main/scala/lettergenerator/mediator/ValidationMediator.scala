@@ -33,7 +33,27 @@ class ValidationMediator(gui: renderer.Wizard) {
     )
 
     paths.foreach(element => validatePathOrThrow(element, pathValidator))
-    gui.message("File paths validated")
+    gui.message("File paths are valid.")
   } 
+  
+  def validateDetails(details: Details)(detailsValidator: RecursiveValidator = new 
+    DetailsValidator(details.headers)): Unit = {
+      try {
+        for (map <- details.tuples) {
+          detailsValidator.applyRecursion[Map[String,String]](
+            List((map.values.mkString(" "),map)), 
+            gui.message("Details are valid."),
+            (msg: String) => 
+              throw new Exception(errorMsgs(detailsValidator).format(msg)))
+        }
+      } catch {
+        case e: Throwable => {
+          gui.message("Error")
+          e.printStackTrace()
+          gui.alert(e.getLocalizedMessage)
+          throw e
+        }
+      }
+  }
   
 }

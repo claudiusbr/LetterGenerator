@@ -30,8 +30,8 @@ class InteractionMediator extends renderer.Interactor {
   private val messageUser: String => Unit = (text: String) => gui.message(text)
   
 
-  def registerInterface(gui: MainFrame): Unit = {
-    this.gui = gui.asInstanceOf[Wizard]
+  def registerInterface(gui: Wizard): Unit = {
+    this.gui = gui
     validator = new ValidationMediator(this.gui)
     loader = new LoadingMediator(this.gui)         
     generator = new DocxMaker(this.gui)            
@@ -44,53 +44,22 @@ class InteractionMediator extends renderer.Interactor {
   
   def runInterface(): Unit = gui.visible = true
   
+  def detailsFileHeaders(): List[String] = {
+    val allowEmptyFileName = List(" ")
+    allowEmptyFileName ++ DetailsFormatter(CsvInput(validator
+      .validatePathOrThrow(("details file",gui.detailsFile))))
+        .details.head.keySet.toList
+  }
+  
   def submit(): Unit = {
     messageUser("Processing...")
     Future { 
       validator.validateAllPaths()
       val details = loader.loadDetails()
-
-      val detailsMessage = "Details file error: the row with values "+
-        "%s is incomplete. Please check it and try again" 
-
-      validateDetails(details,new validators.DetailsValidator(
-        DetailsFormatter(CsvInput(gui.detailsFile)).headers)
-          , detailsMessage)
+      validator.validateDetails(details)()
+      val docPack: WordprocessingMLPackage = loader.loadTemplate()
+      validateTemplate(details.tuples,docPack)
     }
-  }
-  
-  def detailsFileHeaders(): List[String] = {
-    val allowEmptyFileName = List(" ")
-    allowEmptyFileName ++ DetailsFormatter(
-      CsvInput(validator.validatePathOrThrow(("details file",gui.detailsFile))))
-        .details.head.keySet.toList
-  }
-  
-  private def validateDetails(details: List[Map[String,String]],
-    validator: validators.DetailsValidator, message: String): Unit = {
-    
-    var flag = false
-    try {
-      for (mapElement <- details) 
-        validator.applyRecursion[Map[String,String]](
-          List((mapElement.values.mkString(" "),mapElement)), 
-          flag = true,
-          (msg: String) => throw new Exception(
-              "row containing '%s' has a missing value".format(msg)))
-    } catch {
-      case e: Throwable => {
-        gui.message("Error")
-        e.printStackTrace()
-        gui.alert(e.getLocalizedMessage)
-      }
-    }
-    if(flag) loadTemplate(details)
-  }
-
-
-  private def loadTemplate(details: List[Map[String,String]]): Unit = {
-    val docPack: WordprocessingMLPackage = loader.loadTemplate()
-    validateTemplate(details, docPack)
   }
   
 
