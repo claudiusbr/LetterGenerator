@@ -42,7 +42,7 @@ class LoadMedTester extends FunSpec
       val detailsOutput = lm.loadDetails(mockDetailsFormatter)
       
       Then("it returns the data from the details file")
-      assert(detailsOutput == detailsList)
+      assert(detailsOutput.tuples == detailsList)
     }
   }
   

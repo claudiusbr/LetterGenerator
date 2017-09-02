@@ -75,7 +75,7 @@ class ValMedTester extends FunSpec
 
       Then("it should message the user")
       vm.validateAllPaths(mockPathValidator)
-      Mockito.verify(mockGui,Mockito.times(1)).message("File paths validated")
+      Mockito.verify(mockGui,Mockito.times(1)).message("File paths are valid.")
     }
     
     it("should throw an exception if it can't reach the details file") {
@@ -113,6 +113,52 @@ class ValMedTester extends FunSpec
       assertThrows[Exception](vm.validateAllPaths(mockPathValidator))
       And("it should message the user that the destination folder cannot be found")
       Mockito.verify(mockGui,Mockito.times(1)).message(pathMessage.format("destination folder"))
+    }
+  }
+  
+  describe("the validateDetails method") {
+    it("should not throw an exception when a Details object is valid") {
+      Given("valid details")
+      val tuples: List[Map[String,String]] = List(
+        Map("name" -> "The Quick Brown Fox", 
+          "action" -> "Jumped Over The Lazy Dog",
+          "consequence" -> "+35XP"),
+
+        Map("name" -> "The Lazy Dog",
+            "action" -> "Was Jumped Over By The Quick Brown Fox",
+            "consequence" -> "Had To Re-evaluate His Life Choices"))
+            
+      val headers: Array[String] = tuples.head.keys.toArray
+
+      val details = new Details(headers, tuples) 
+      
+      When("the method is called")
+      vm.validateDetails(details)()
+      
+      Then("it should not throw an exception")
+      Mockito.verify(mockGui,Mockito.never).message("Error")
+    }
+    
+    it("should throw an exception when one of the tuples has an empty value") {
+      Given("a Details object with a blank value")
+      val tuplesWithEmpty: List[Map[String,String]] = List(
+        Map("name" -> "The Quick Brown Fox", 
+          "action" -> "",
+          "consequence" -> "+35XP"),
+
+        Map("name" -> "The Lazy Dog",
+            "action" -> "Was Jumped Over By The Quick Brown Fox",
+            "consequence" -> "Something about life choices"))
+      val headers: Array[String] = tuplesWithEmpty.head.keys.toArray
+      val detailsWithEmpty = new Details(headers, tuplesWithEmpty) 
+
+      When("the method is called")
+      Then("it should throw an exception")
+      assertThrows[Exception](vm.validateDetails(detailsWithEmpty)())
+
+      And("it should message and alert the user")
+      Mockito.verify(mockGui,Mockito.times(1)).message("Error")
+      Mockito.verify(mockGui,Mockito.times(1)).alert(Matchers.anyString())
     }
   }
 }
