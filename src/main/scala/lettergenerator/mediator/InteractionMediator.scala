@@ -82,10 +82,7 @@ class InteractionMediator extends renderer.Interactor {
 
 
   private def loadTemplate(details: List[Map[String,String]]): Unit = {
-    val docPack: WordprocessingMLPackage = 
-      TemplateFormatter(DocxInput(gui.templateFile))
-        .template
-        
+    val docPack: WordprocessingMLPackage = loader.loadTemplate()
     validateTemplate(details, docPack)
   }
   

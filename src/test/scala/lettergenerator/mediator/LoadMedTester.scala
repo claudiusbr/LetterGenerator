@@ -58,7 +58,7 @@ class LoadMedTester extends FunSpec
       When("the method is called")
       val templateOutput = lm.loadTemplate(mockTemplateFormatter)
 
-      Then("it returns a string with the contents of the ")
+      Then("it returns a WodprocessingMLPackage instance of the docx")
       assert(templateOutput == mockWordML)
     }
   }
