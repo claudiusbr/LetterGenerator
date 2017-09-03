@@ -18,7 +18,6 @@ import scala.annotation.tailrec
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-
 import java.util.{HashMap => JHashMap}
 
 class InteractionMediator extends renderer.Interactor {
@@ -28,7 +27,6 @@ class InteractionMediator extends renderer.Interactor {
   private var generator: DocxMaker = _
   
   private val messageUser: String => Unit = (text: String) => gui.message(text)
-  
 
   def registerInterface(gui: Wizard): Unit = {
     this.gui = gui
@@ -46,7 +44,7 @@ class InteractionMediator extends renderer.Interactor {
   
   def detailsFileHeaders(): List[String] = {
     val allowEmptyFileName = List(" ")
-    allowEmptyFileName ++ DetailsFormatter(CsvInput(validator
+    allowEmptyFileName ++ new DetailsFormatter(CsvInput(validator
       .validatePathOrThrow(("details file",gui.detailsFile))))
         .details.head.keySet.toList
   }
@@ -55,36 +53,13 @@ class InteractionMediator extends renderer.Interactor {
     messageUser("Processing...")
     Future { 
       validator.validateAllPaths()
-      val details = loader.loadDetails()
+      val details: Details = loader.loadDetails()
       validator.validateDetails(details)()
       val docPack: WordprocessingMLPackage = loader.loadTemplate()
-      validateTemplate(details.tuples,docPack)
+      validator.validateDetails(details)()
+      generateLetters(details.tuples,docPack)
     }
   }
-  
-
-  private def validateTemplate(details: List[Map[String,String]], 
-    docPack: WordprocessingMLPackage): Unit = {
-    val docText: String = WordMLToStringFormatter(docPack).text
-    val validator = new validators.TemplateValidator(docText)
-    val message: String = "Error: could not find variable %s on template."
-    val headers: List[(String,String)] = gui.fnAlsoInTemplate match {
-      case true => details.head.keySet.map(header => (header,header)).toList
-      case false => details.head.keySet.filter(_ != gui.fNameColumn)
-        .map(header => (header,header)).toList
-    }
-    try{
-      validator.applyRecursion[String](
-        headers,generateLetters(details,docPack),
-        (msg: String) => throw new Exception(msg))
-    } catch {
-      case e: Throwable => {
-        e.printStackTrace()
-        messageUser(message.format(e.getLocalizedMessage))
-      }
-    }
-  }
-  
 
   private def generateLetters(details: List[Map[String,String]],
     docPack: WordprocessingMLPackage): Unit = {
