@@ -5,20 +5,12 @@ import formatter._
 import loader._
 import renderer.Wizard
 
-import org.docx4j.XmlUtils
-import org.docx4j.wml.Document
-import org.docx4j.openpackaging.io.SaveToZipFile
-import org.docx4j.openpackaging.packages.WordprocessingMLPackage
-import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
-
 import scala.swing.MainFrame
 
-import scala.annotation.tailrec
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-
-import java.util.{HashMap => JHashMap}
 
 class InteractionMediator extends renderer.Interactor {
   private var gui: Wizard = _ 
@@ -51,58 +43,13 @@ class InteractionMediator extends renderer.Interactor {
   
   def submit(): Unit = {
     messageUser("Processing...")
-    Future { 
+    Future {
       validator.validateAllPaths()
       val details: Details = loader.loadDetails()
       validator.validateDetails(details)()
       val docPack: WordprocessingMLPackage = loader.loadTemplate()
       validator.validateDetails(details)()
-      generateLetters(details.tuples,docPack)
+      generator.makeManyDocx(details.tuples, docPack, validator)
     }
-  }
-
-  private def generateLetters(details: List[Map[String,String]],
-    docPack: WordprocessingMLPackage): Unit = {
-    import scala.collection.JavaConverters._
-
-    val destination: String = gui.destinationFolder
-    val template: MainDocumentPart = docPack.getMainDocumentPart
-    val duplFileChecker = validator
-
-    @tailrec
-    def fileName(name: String, counter: Int): String = {
-      val increment = counter + 1
-      duplFileChecker.validatePath(destination+"/"+name+".docx") match {
-        case Some(_) => 
-          duplFileChecker.validatePath(destination+"/"+name+increment+".docx") match {
-            case Some(_) => fileName(name,increment)
-            case None => destination+"/"+name+increment+".docx"
-          }
-        case None => destination+"/"+name+".docx"
-      }
-    }
-
-    for(smap <- details) {
-      val fname = smap.collectFirst({
-        case (k: String,v: String) if k == gui.fNameColumn => v
-      }) match {
-        case Some(file) => file
-        case None => "Output"
-      }
-      
-      val map: JHashMap[String,String] = gui.fnAlsoInTemplate match {
-        case true => new JHashMap(smap.asJava)
-        case false => new JHashMap(smap.filter(_._1 != gui.fNameColumn).asJava)
-      }
-
-      val jaxbElement = template.getJaxbElement
-      val xml: String = XmlUtils.marshaltoString(jaxbElement, true)
-      val replaced: Object = XmlUtils.unmarshallFromTemplate(xml, map)
-      template.setJaxbElement(replaced.asInstanceOf[Document])
-      
-      new SaveToZipFile(docPack).save(s"${fileName(fname,0)}")
-      template.setJaxbElement(jaxbElement)
-    }
-    messageUser("Done!")
   }
 }
