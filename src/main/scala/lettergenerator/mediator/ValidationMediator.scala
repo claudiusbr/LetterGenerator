@@ -2,6 +2,9 @@ package lettergenerator
 package mediator
 
 import validators._
+import formatter.WordMLToStringFormatter
+
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 
 class ValidationMediator(gui: renderer.Wizard) {
   private val errorMsgs = ErrorMessageFactory
@@ -54,6 +57,29 @@ class ValidationMediator(gui: renderer.Wizard) {
           throw e
         }
       }
+  }
+  
+  def validateTemplate(details: Details, docPack: WordprocessingMLPackage)(
+    templForm: WordMLToStringFormatter = new WordMLToStringFormatter(docPack)): Unit = {
+    val docText: String = templForm.text
+    val templVal = new TemplateValidator(docText)
+    val headers: List[(String,String)] = gui.fnAlsoInTemplate match {
+      case true => details.headers.map(header => (header,header)).toList
+      case false => details.headers.filter(_ != gui.fNameColumn)
+        .map(header => (header,header)).toList
+    }
+    try{
+      templVal.applyRecursion[String](
+        headers,gui.message("Template variables are valid."),
+        (msg: String) => throw new Exception(msg))
+    } catch {
+      case e: Throwable => {
+        gui.message("Error on template validation")
+        e.printStackTrace()
+        gui.message(errorMsgs(templVal).format(e.getLocalizedMessage))
+        throw e
+      }
+    }
   }
   
 }

@@ -10,7 +10,7 @@ import scala.collection.mutable
 import scala.util.matching.Regex
 import lettergenerator.Converters
 
-case class DetailsFormatter(input: Input) {
+class DetailsFormatter(input: Input) {
   
   private val Separator: String = ";SEPARATOR;"
 
