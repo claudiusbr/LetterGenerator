@@ -3,6 +3,9 @@ package mediator
 
 import renderer.Wizard
 import validators._
+import formatter.WordMLToStringFormatter
+
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 
 import org.scalatest.{FunSpec, GivenWhenThen}
 import org.mockito.Mockito.when
@@ -20,6 +23,20 @@ class ValMedTester extends FunSpec
   
   val path = "./valid/path"
   val otherPath = "./some/path"
+
+
+  val tuples: List[Map[String,String]] = List(
+    Map("name" -> "The Quick Brown Fox", 
+      "action" -> "Jumped Over The Lazy Dog",
+      "consequence" -> "earned +35XP"),
+
+    Map("name" -> "The Lazy Dog",
+        "action" -> "Was Jumped Over By The Quick Brown Fox",
+        "consequence" -> "Had To Re-evaluate His Life Choices"))
+        
+  val headers: Array[String] = tuples.head.keys.toArray
+
+  val details = new Details(headers, tuples) 
   
   when(mockPathValidator.validate(
     Matchers.matches(path)))
@@ -119,36 +136,20 @@ class ValMedTester extends FunSpec
   describe("the validateDetails method") {
     it("should not throw an exception when a Details object is valid") {
       Given("valid details")
-      val tuples: List[Map[String,String]] = List(
-        Map("name" -> "The Quick Brown Fox", 
-          "action" -> "Jumped Over The Lazy Dog",
-          "consequence" -> "+35XP"),
-
-        Map("name" -> "The Lazy Dog",
-            "action" -> "Was Jumped Over By The Quick Brown Fox",
-            "consequence" -> "Had To Re-evaluate His Life Choices"))
-            
-      val headers: Array[String] = tuples.head.keys.toArray
-
-      val details = new Details(headers, tuples) 
+      val validDetails = details
       
       When("the method is called")
-      vm.validateDetails(details)()
+      vm.validateDetails(validDetails)()
       
       Then("it should not throw an exception")
-      Mockito.verify(mockGui,Mockito.never).message("Error")
+      Mockito.verify(mockGui,Mockito.never()).message("Error")
     }
     
     it("should throw an exception when one of the tuples has an empty value") {
       Given("a Details object with a blank value")
       val tuplesWithEmpty: List[Map[String,String]] = List(
-        Map("name" -> "The Quick Brown Fox", 
-          "action" -> "",
-          "consequence" -> "+35XP"),
-
-        Map("name" -> "The Lazy Dog",
-            "action" -> "Was Jumped Over By The Quick Brown Fox",
-            "consequence" -> "Something about life choices"))
+        Map("name" -> "The Quick Brown Fox", "action" -> "",
+          "consequence" -> "+35XP"), details.tuples.tail.head)
       val headers: Array[String] = tuplesWithEmpty.head.keys.toArray
       val detailsWithEmpty = new Details(headers, tuplesWithEmpty) 
 
@@ -159,6 +160,36 @@ class ValMedTester extends FunSpec
       And("it should message and alert the user")
       Mockito.verify(mockGui,Mockito.times(1)).message("Error")
       Mockito.verify(mockGui,Mockito.times(1)).alert(Matchers.anyString())
+    }
+  }
+  
+  describe("the validateTemplate method") {
+
+    val mockTempl: WordprocessingMLPackage = mock[WordprocessingMLPackage]
+    val mockTemplForm: WordMLToStringFormatter = mock[WordMLToStringFormatter]
+    
+    val tuplesWithFileName: List[Map[String,String]] = List(
+      Map("filename" -> "TheFox") ++ details.tuples.head,
+      Map("filename" -> "TheDog") ++ details.tuples.tail.head)
+    val headersWithFileName = tuplesWithFileName.head.keySet.toArray
+    val detailsWithFileName = 
+      new Details(headersWithFileName,tuplesWithFileName)
+
+    it("should not throw an exception without file names") {
+      Given("a template file's contents")
+      when(mockTemplForm.text).thenReturn(
+        "Hi! Are you ${name}? You ${action}, so you ${consequence}.")
+
+      When("it is compared with the contents of a valid details file")
+      val detailsForComparison = details
+      vm.validateTemplate(detailsForComparison, mockTempl)(mockTemplForm)
+      
+      Then("it will not throw an exception")
+      Mockito.verify(mockGui,Mockito.never()).message("Error on template validation")
+
+      And("it will tell the user that the template is valid")
+      Mockito.verify(mockGui,Mockito.times(1))
+        .message("Template variables are valid.")
     }
   }
 }
