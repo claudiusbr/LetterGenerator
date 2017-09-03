@@ -12,10 +12,9 @@ import lettergenerator.Converters
 
 class DetailsFormatter(input: Input) {
   
-  private val Separator: String = ";SEPARATOR;"
-
   import Converters.fromAnyToIterator
-  val it: Iterator[String] = input.getContents()
+  private val it: Iterator[String] = input.getContents()
+  private val Separator: String = ";SEPARATOR;"
 
   val headers: Array[String] = it.next.split(",")
 
