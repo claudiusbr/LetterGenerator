@@ -212,6 +212,24 @@ class ValMedTester extends FunSpec
       Mockito.verify(mockGui,Mockito.times(2))
         .message("Template variables are valid.")
     }
+
+    it("should not throw an exception with file names but no ticks"){
+      Given("a column of file names in the details, but no " +
+          "\ncorresponding variable in the template")
+      when(mockTemplForm.text).thenReturn(
+        "Hi! Are you ${name}? You ${action}, so you ${consequence}.")
+          
+      When("the 'File name also part of letter' option is not ticked")
+      when(mockGui.fnAlsoInTemplate).thenReturn(false)
+
+      Then("it will not throw an exception")
+      Mockito.verify(mockGui,Mockito.never()).message("Error on template validation")
+
+      And("it will tell the user that the template is valid")
+      Mockito.verify(mockGui,Mockito.times(2))
+        .message("Template variables are valid.")
+    }
+
   }
 }
 
