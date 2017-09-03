@@ -1,6 +1,8 @@
 package lettergenerator
 package mediator
 
+import formatter.DocxMakerFormatter
+
 import org.docx4j.XmlUtils
 import org.docx4j.wml.Document
 import org.docx4j.openpackaging.io.SaveToZipFile
@@ -10,6 +12,7 @@ import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
 import java.util.{HashMap => JHashMap}
 
 class DocxMaker(gui: renderer.Wizard) {
+  val formatter = new DocxMakerFormatter
   
   def makeManyDocx(details: Iterable[Map[String,String]], 
     docPack: WordprocessingMLPackage,
@@ -17,19 +20,20 @@ class DocxMaker(gui: renderer.Wizard) {
       details.foreach(makeDocx(_,docPack,valMed))
       gui.message("Done!")
   }
-
   
   def makeDocx(details: Map[String,String], docPack: WordprocessingMLPackage,
     valMed: ValidationMediator): Unit = {
 
-    val detailsAsJMap = prepareMap(details)
-    val tempFileName = fileName(details)
+    val detailsAsJMap = formatter.prepareMap(
+        details,gui.fnAlsoInTemplate,gui.fNameColumn)
+
+    val tempFileName = formatter.fileName(details,gui.fNameColumn)
     val finalFileName = valMed.fileNameIfDuplicate(tempFileName, ".docx")
     generateDocx(detailsAsJMap,finalFileName,docPack)
     gui.message(s"Saving $finalFileName ...")
   }
 
-  def generateDocx(jmap: JHashMap[String,String], fileName: String, 
+  private def generateDocx(jmap: JHashMap[String,String], fileName: String, 
     docPack: WordprocessingMLPackage): Unit = {
 
     val template: MainDocumentPart = docPack.getMainDocumentPart
@@ -42,23 +46,4 @@ class DocxMaker(gui: renderer.Wizard) {
     new SaveToZipFile(docPack).save(fileName)
     template.setJaxbElement(jaxbElement)
   } 
-  
-  def prepareMap(details: Map[String,String]): JHashMap[String,String] = {
-    import scala.collection.JavaConverters._
-
-    gui.fnAlsoInTemplate match {
-      case true => new JHashMap(details.asJava)
-      case false => new JHashMap(details.filter(_._1 != gui.fNameColumn).asJava)
-    }
-  }
-
-  def fileName(details: Map[String,String]): String = {
-    val fileNameColumn: String = gui.fNameColumn
-    details.collectFirst({
-      case (fileNameColumn,v: String) => v
-    }) match {
-      case Some(file) => file
-      case None => "Output"
-    }
-  }
 }
