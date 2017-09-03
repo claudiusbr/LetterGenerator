@@ -38,6 +38,23 @@ Refactor
   ```
 
 
+Validate "empty File name column" + "'File name also in template' box ticked" on submit
+---------------------------------------------------------------------------------------
+- this should not be allowed to happen
+
+
+Find a way to extract only the first line of the details file without loading the whole thing
+---------------------------------------------------------------------------------------------
+- a large details file as it currently stands could affect performance, as
+  after someone clicks on 'Open' it will be loaded to get the headers. Find a
+  way to only get the first line, without reading the whole thing.
+
+
+Something wrong with changing the details file after one is entered and a filename column is chosen
+---------------------------------------------------------------------------------------------------
+- An exception is being thrown. Analyse what it is.
+
+
 create a web interface
 ----------------------
 - either as part of or as a subproject
