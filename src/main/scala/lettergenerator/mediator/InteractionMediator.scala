@@ -49,7 +49,7 @@ class InteractionMediator extends renderer.Interactor {
       validator.validateDetails(details)()
       val docPack: WordprocessingMLPackage = loader.loadTemplate()
       validator.validateDetails(details)()
-      generator.makeManyDocx(details.tuples, docPack, validator)
+      generator.makeManyDocx(details, docPack, validator)()
     }
   }
 }

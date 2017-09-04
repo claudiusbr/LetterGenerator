@@ -14,36 +14,47 @@ import java.util.{HashMap => JHashMap}
 class DocxMaker(gui: renderer.Wizard) {
   val formatter = new DocxMakerFormatter
   
-  def makeManyDocx(details: Iterable[Map[String,String]], 
-    docPack: WordprocessingMLPackage,
-    valMed: ValidationMediator): Unit = {
-      details.foreach(makeDocx(_,docPack,valMed))
-      gui.message("Done!")
+  def makeManyDocx(details: Details, 
+    docPack: WordprocessingMLPackage, valMed: ValidationMediator)(
+    saver: SaveToZipFile = new SaveToZipFile(docPack)): Unit = {
+
+    details.tuples.foreach(makeSingleDocx(_,docPack,valMed)(saver))
+    gui.message("Done!")
   }
   
-  def makeDocx(details: Map[String,String], docPack: WordprocessingMLPackage,
-    valMed: ValidationMediator): Unit = {
+  def makeSingleDocx(detailsTuple: Map[String,String], 
+    docPack: WordprocessingMLPackage, valMed: ValidationMediator)(
+    saver: SaveToZipFile = new SaveToZipFile(docPack)): Unit = {
 
     val detailsAsJMap = formatter.prepareMap(
-        details,gui.fnAlsoInTemplate,gui.fNameColumn)
+        detailsTuple,gui.fnAlsoInTemplate,gui.fNameColumn)
 
-    val tempFileName = formatter.fileName(details,gui.fNameColumn)
+    val tempFileName = formatter.fileName(detailsTuple,gui.fNameColumn)
     val finalFileName = valMed.fileNameIfDuplicate(tempFileName, ".docx")
-    generateDocx(detailsAsJMap,finalFileName,docPack)
     gui.message(s"Saving $finalFileName ...")
+    draftSaveReset(detailsAsJMap,finalFileName,docPack)(saver)
   }
 
-  private def generateDocx(jmap: JHashMap[String,String], fileName: String, 
-    docPack: WordprocessingMLPackage): Unit = {
+  private def draftSaveReset(jmap: JHashMap[String,String], fileName: String, 
+    docPack: WordprocessingMLPackage)(saver: SaveToZipFile): Unit = {
 
+    val marshaller = XmlUtils.marshaltoString(_: Any, true)
+    /* draft */
+    // this returns a reference to the Main Document Part, I think
     val template: MainDocumentPart = docPack.getMainDocumentPart
 
-    val jaxbElement = template.getJaxbElement
+    // which is why we go through the trouble of doing the below
+    // now, if the above is actually a copy and not a reference
+    // then we shouldn't bother with the 'reset' bit
+    val jaxbElement: Document = template.getJaxbElement
     val xml: String = XmlUtils.marshaltoString(jaxbElement, true)
     val replaced: Object = XmlUtils.unmarshallFromTemplate(xml, jmap)
     template.setJaxbElement(replaced.asInstanceOf[Document])
     
-    new SaveToZipFile(docPack).save(fileName)
+    // save
+    saver.save(fileName)
+    
+    // reset
     template.setJaxbElement(jaxbElement)
   } 
 }
