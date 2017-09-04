@@ -1,6 +1,28 @@
 TODOs
 =====
 
+Test Scenarios
+--------------
+- Test what would happen if the user provided only one column and a template
+  with no variables
+  - e.g., someone decides to use the generator to just create the exact same
+    copy of a letter, but each with a different filename. How would the
+    DetailsValidator work there if it would remove the only column provided
+    from the list, therefore giving it an empty list?
+- Test if user input can take special characters
+- Test ValidationMediator's duplicate file checker method;
+- Test DocxMakerFormatter;
+
+
+Check if the effort of saving the JaxbElement within draftSaveReset is really necessary
+---------------------------------------------------------------------------------------
+- it all boils down to whether `docPack.getMainDocumentPart` and
+  `template.getJaxbElement` return references or copies.
+- actually, see
+  [this](https://www.docx4java.org/forums/docx-java-f6/which-methods-to-use-for-the-deprecated-ones-t2373.html):
+  it seems `getJaxbElement` is deprecated. Replace it by `getContents()`
+  whenever you can.
+
 
 Refactor
 --------
@@ -38,6 +60,11 @@ Refactor
   ```
 
 
+Something wrong with changing the details file after one is entered and a filename column is chosen
+---------------------------------------------------------------------------------------------------
+- An exception is being thrown. Analyse what it is.
+
+
 Validate "empty File name column" + "'File name also in template' box ticked" on submit
 ---------------------------------------------------------------------------------------
 - this should not be allowed to happen
@@ -48,11 +75,6 @@ Find a way to extract only the first line of the details file without loading th
 - a large details file as it currently stands could affect performance, as
   after someone clicks on 'Open' it will be loaded to get the headers. Find a
   way to only get the first line, without reading the whole thing.
-
-
-Something wrong with changing the details file after one is entered and a filename column is chosen
----------------------------------------------------------------------------------------------------
-- An exception is being thrown. Analyse what it is.
 
 
 create a web interface
@@ -69,17 +91,6 @@ redirect output of docx4j and dependencies
 ------------------------------------------
 - a lot of logging seems to go on from the docx4j package. redirect that to a
   logger or something else.
-
-
-Test Scenarios
---------------
-- Test what would happen if the user provided only one column and a template
-  with no variables
-  - e.g., someone decides to use the generator to just create the exact same
-    copy of a letter, but each with a different filename. How would the
-    DetailsValidator work there if it would remove the only column provided
-    from the list, therefore giving it an empty list?
-- Test if user input can take special characters
 
 
 improve on usage of Future in a way that the user is updated
