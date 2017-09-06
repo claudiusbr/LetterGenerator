@@ -57,6 +57,7 @@ Check if the effort of saving the JaxbElement within draftSaveReset is really ne
 ---------------------------------------------------------------------------------------
 - it all boils down to whether `docPack.getMainDocumentPart` and
   `template.getJaxbElement` return references or copies.
+  - references. If you don't run the 'reset' bit it does not work
 - actually, see
   [this](https://www.docx4java.org/forums/docx-java-f6/which-methods-to-use-for-the-deprecated-ones-t2373.html):
   it seems `getJaxbElement` is deprecated. Replace it by `getContents()`
