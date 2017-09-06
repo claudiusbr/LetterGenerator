@@ -1,31 +1,12 @@
 TODOs
 =====
 
-Test Scenarios
---------------
-- Test what would happen if the user provided only one column and a template
-  with no variables
-  - e.g., someone decides to use the generator to just create the exact same
-    copy of a letter, but each with a different filename. How would the
-    DetailsValidator work there if it would remove the only column provided
-    from the list, therefore giving it an empty list?
-- Test if user input can take special characters
-- Test ValidationMediator's duplicate file checker method;
-- Test DocxMakerFormatter;
-
-
-Check if the effort of saving the JaxbElement within draftSaveReset is really necessary
----------------------------------------------------------------------------------------
-- it all boils down to whether `docPack.getMainDocumentPart` and
-  `template.getJaxbElement` return references or copies.
-- actually, see
-  [this](https://www.docx4java.org/forums/docx-java-f6/which-methods-to-use-for-the-deprecated-ones-t2373.html):
-  it seems `getJaxbElement` is deprecated. Replace it by `getContents()`
-  whenever you can.
-
-
 Refactor
 --------
+- make methods smaller and stop this thing of 'one method calling the next'.
+  It's making for really large method signatures. Instead, have sets of small
+  methods and get them all called by the main method (this applies for both
+  InteractionMediator and DocxMaker)
 - make each method in InteractionMediator a standalone one and make one method
   responsible for calling them and checking if they are ok, or if they returned
   an exception, and communicate any relevant details to the user. E.g.:
@@ -58,6 +39,29 @@ Refactor
     })
   }
   ```
+
+Test Scenarios
+--------------
+- Test what would happen if the user provided only one column and a template
+  with no variables
+  - e.g., someone decides to use the generator to just create the exact same
+    copy of a letter, but each with a different filename. How would the
+    DetailsValidator work there if it would remove the only column provided
+    from the list, therefore giving it an empty list?
+- Test if user input can take special characters
+- Test ValidationMediator's duplicate file checker method;
+- Test DocxMakerFormatter;
+
+
+Check if the effort of saving the JaxbElement within draftSaveReset is really necessary
+---------------------------------------------------------------------------------------
+- it all boils down to whether `docPack.getMainDocumentPart` and
+  `template.getJaxbElement` return references or copies.
+- actually, see
+  [this](https://www.docx4java.org/forums/docx-java-f6/which-methods-to-use-for-the-deprecated-ones-t2373.html):
+  it seems `getJaxbElement` is deprecated. Replace it by `getContents()`
+  whenever you can.
+
 
 
 Something wrong with changing the details file after one is entered and a filename column is chosen
