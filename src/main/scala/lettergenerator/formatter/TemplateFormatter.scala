@@ -9,6 +9,6 @@ class TemplateFormatter(input: Input) {
   
   val template: WordprocessingMLPackage = anyToWordPack(input.getContents())
   
-  def anyToWordPack(obj: Any): WordprocessingMLPackage = 
+  private def anyToWordPack(obj: Any): WordprocessingMLPackage = 
     obj.asInstanceOf[WordprocessingMLPackage]
 }
