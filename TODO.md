@@ -7,6 +7,9 @@ Refactor
   It's making for really large method signatures. Instead, have sets of small
   methods and get them all called by the main method (this applies for both
   InteractionMediator and DocxMaker)
+  - done.
+- this may have made DocxMaker a bit too big. Examine whether it's worth
+  creating a new entity.
 - make each method in InteractionMediator a standalone one and make one method
   responsible for calling them and checking if they are ok, or if they returned
   an exception, and communicate any relevant details to the user. E.g.:
@@ -55,9 +58,6 @@ Test Scenarios
 
 Check if the effort of saving the JaxbElement within draftSaveReset is really necessary
 ---------------------------------------------------------------------------------------
-- it all boils down to whether `docPack.getMainDocumentPart` and
-  `template.getJaxbElement` return references or copies.
-  - references. If you don't run the 'reset' bit it does not work
 - actually, see
   [this](https://www.docx4java.org/forums/docx-java-f6/which-methods-to-use-for-the-deprecated-ones-t2373.html):
   it seems `getJaxbElement` is deprecated. Replace it by `getContents()`
