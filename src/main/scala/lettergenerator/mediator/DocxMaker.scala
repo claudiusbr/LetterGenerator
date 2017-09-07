@@ -31,30 +31,41 @@ class DocxMaker(gui: renderer.Wizard) {
 
     val tempFileName = formatter.fileName(detailsTuple,gui.fNameColumn)
     val finalFileName = valMed.fileNameIfDuplicate(tempFileName, ".docx")
+
     gui.message(s"Saving $finalFileName ...")
-    draftSaveReset(detailsAsJMap,finalFileName,docPack)(saver)
+    val template: MainDocumentPart = getTemplateMainPart(docPack)
+    val original: Document = getTemplateContents(template)
+    val newContents: Document = makeNewMainPartContents(original,detailsAsJMap)
+    setNewMainPartContents(template,newContents)
+    saveNewDocx(docPack,finalFileName)(saver)
+    resetTemplateToOriginal(template, original)
   }
 
-  private def draftSaveReset(jmap: JHashMap[String,String], fileName: String, 
-    docPack: WordprocessingMLPackage)(saver: SaveToZipFile): Unit = {
+  private def getTemplateMainPart(docPack: WordprocessingMLPackage): MainDocumentPart = {
+    docPack.getMainDocumentPart
+  }
 
-    val marshaller = XmlUtils.marshaltoString(_: Any, true)
-    /* draft */
-    // this returns a reference to the Main Document Part, I think
-    val template: MainDocumentPart = docPack.getMainDocumentPart
+  private def getTemplateContents(template: MainDocumentPart): Document = {
+    template.getJaxbElement
+  }
 
-    // which is why we go through the trouble of doing the below
-    // now, if the above is actually a copy and not a reference
-    // then we shouldn't bother with the 'reset' bit
-    val jaxbElement: Document = template.getJaxbElement
-    val xml: String = XmlUtils.marshaltoString(jaxbElement, true)
-    val replaced: Object = XmlUtils.unmarshallFromTemplate(xml, jmap)
-    template.setJaxbElement(replaced.asInstanceOf[Document])
-    
-    // save
+  private def makeNewMainPartContents(original: Document,
+    jmapDetails: JHashMap[String,String]): Document = {
+
+    val xml: String = XmlUtils.marshaltoString(original, true)
+    XmlUtils.unmarshallFromTemplate(xml, jmapDetails).asInstanceOf[Document]
+  }
+
+  private def setNewMainPartContents(template: MainDocumentPart, replacement: Document): Unit = {
+    template.setJaxbElement(replacement)
+  }
+
+  private def saveNewDocx(docPack: WordprocessingMLPackage, fileName: String)(
+    saver: SaveToZipFile = new SaveToZipFile(docPack)): Unit = {
     saver.save(fileName)
-    
-    // reset
-    template.setJaxbElement(jaxbElement)
-  } 
+  }
+
+  private def resetTemplateToOriginal(template: MainDocumentPart, original: Document): Unit = {
+    template.setJaxbElement(original)
+  }
 }
