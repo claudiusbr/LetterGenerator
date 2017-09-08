@@ -43,6 +43,17 @@ Refactor
   }
   ```
 
+- Is there a way to make multithreading work for us when generating the docx?
+  As in, is it possible to create several DocxMakers, one per thread, each with
+  its own copy of the template and a chunk of the details file to save
+  documents to disk concurrently? Is it even possible to save more than one
+  document to disk at once? you can have multiple processors, but in a local
+  machine they are still written to disk one at a time... Or maybe it varies
+  depending on the block size, as in there could be more than one file in the
+  same block, depending on how big the block is...? In any case, these are
+  "ideas" for now, so still need to verify if they are possible.
+
+
 Test Scenarios
 --------------
 - Test what would happen if the user provided only one column and a template
