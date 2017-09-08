@@ -36,7 +36,7 @@ class DocxMakerTester extends FunSpec
         "consequence" -> "Had To Re-evaluate His Life Choices"))
   val headers: Array[String] = tuples.head.keys.toArray
   
-  val dmkr = new DocxMaker(mockGui)
+  val dmkr = new DocxMediator(mockGui,mockDocPack)
 
   when(mockGui.fnAlsoInTemplate).thenReturn(true)
   when(mockGui.fNameColumn).thenReturn("name")
@@ -52,26 +52,16 @@ class DocxMakerTester extends FunSpec
   describe("the makeManyDocx method") {
     it("should generate many docx"){
       Given("details with two tuples")
-      val details = new Details(headers, tuples) 
-      
       When("the method is called")
-      try {
-        dmkr.makeManyDocx(details, mockDocPack, mockValMed)(mockSaver)
-      } catch {
-        case _: Throwable => Unit
-      }
-
-      Then("two documents should be created")
-      Mockito.verify(mockSaver,Mockito.times(2)).save("SomeName")
+      Then("it should generate many docx")
     }
   }
 
-  describe("the makeDocx method") {
+  describe("the makeSingleDocx method") {
     it("should make a single docx"){
       Given("single tuple of details")
-      val detailsTuple: Map[String,String] = tuples.head
-
-      assert(true)
+      When("the method is called")
+      Then("it should create a single Docx")
     }
   }
 }

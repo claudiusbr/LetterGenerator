@@ -1,7 +1,5 @@
 package lettergenerator
-package mediator
-
-import formatter.DocxMakerFormatter
+package generators
 
 import org.docx4j.XmlUtils
 import org.docx4j.wml.Document
@@ -11,37 +9,23 @@ import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
 
 import java.util.{HashMap => JHashMap}
 
-class DocxMaker(gui: renderer.Wizard) {
-  val formatter = new DocxMakerFormatter
-  
-  def makeManyDocx(details: Details, 
-    docPack: WordprocessingMLPackage, valMed: ValidationMediator)(
+/**
+ *
+ */
+class DocxGenerator(docPack: WordprocessingMLPackage) {
+
+  def generate(jmapDetails: JHashMap[String,String], fileName: String)(
     saver: SaveToZipFile = new SaveToZipFile(docPack)): Unit = {
 
-    details.tuples.foreach(makeSingleDocx(_,docPack,valMed)(saver))
-    gui.message("Done!")
-  }
-  
-  def makeSingleDocx(detailsTuple: Map[String,String], 
-    docPack: WordprocessingMLPackage, valMed: ValidationMediator)(
-    saver: SaveToZipFile = new SaveToZipFile(docPack)): Unit = {
-
-    val detailsAsJMap = formatter.prepareMap(
-        detailsTuple,gui.fnAlsoInTemplate,gui.fNameColumn)
-
-    val tempFileName = formatter.fileName(detailsTuple,gui.fNameColumn)
-    val finalFileName = valMed.fileNameIfDuplicate(tempFileName, ".docx")
-
-    gui.message(s"Saving $finalFileName ...")
-    val template: MainDocumentPart = getTemplateMainPart(docPack)
+    val template: MainDocumentPart = getTemplateMainPart
     val original: Document = getTemplateContents(template)
-    val newContents: Document = makeNewMainPartContents(original,detailsAsJMap)
+    val newContents: Document = makeNewMainPartContents(original,jmapDetails)
     setNewMainPartContents(template,newContents)
-    saveNewDocx(docPack,finalFileName)(saver)
+    saveNewDocx(fileName)(saver)
     resetTemplateToOriginal(template, original)
   }
 
-  private def getTemplateMainPart(docPack: WordprocessingMLPackage): MainDocumentPart = {
+  private def getTemplateMainPart: MainDocumentPart = {
     docPack.getMainDocumentPart
   }
 
@@ -60,8 +44,7 @@ class DocxMaker(gui: renderer.Wizard) {
     template.setJaxbElement(replacement)
   }
 
-  private def saveNewDocx(docPack: WordprocessingMLPackage, fileName: String)(
-    saver: SaveToZipFile = new SaveToZipFile(docPack)): Unit = {
+  private def saveNewDocx(fileName: String)(saver: SaveToZipFile): Unit = {
     saver.save(fileName)
   }
 

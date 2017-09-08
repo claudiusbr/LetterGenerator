@@ -16,7 +16,6 @@ class InteractionMediator extends renderer.Interactor {
   private var gui: Wizard = _ 
   private var validator: ValidationMediator = _
   private var loader: LoadingMediator = _
-  private var generator: DocxMaker = _
   
   private val messageUser: String => Unit = (text: String) => gui.message(text)
 
@@ -24,7 +23,6 @@ class InteractionMediator extends renderer.Interactor {
     this.gui = gui
     validator = new ValidationMediator(this.gui)
     loader = new LoadingMediator(this.gui)         
-    generator = new DocxMaker(this.gui)            
   }
 
   def hasGui: Boolean = Option[MainFrame](gui) match {
@@ -49,7 +47,8 @@ class InteractionMediator extends renderer.Interactor {
       validator.validateDetails(details)()
       val docPack: WordprocessingMLPackage = loader.loadTemplate()
       validator.validateDetails(details)()
-      generator.makeManyDocx(details, docPack, validator)()
+      val generator = new DocxMediator(gui,docPack)
+      generator.makeManyDocx(details, validator)()
     }
   }
 }
