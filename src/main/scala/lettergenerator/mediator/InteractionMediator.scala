@@ -7,8 +7,6 @@ import renderer.Wizard
 
 import scala.swing.MainFrame
 
-import org.docx4j.openpackaging.packages.WordprocessingMLPackage
-
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -45,9 +43,9 @@ class InteractionMediator extends renderer.Interactor {
       validator.validateAllPaths()
       val details: Details = loader.loadDetails()
       validator.validateDetails(details)()
-      val docPack: WordprocessingMLPackage = loader.loadTemplate()
-      validator.validateTemplate(details, docPack)()
-      val generator = new DocxMediator(gui,docPack)
+      val template: Template = loader.loadTemplate()
+      validator.validateTemplate(details, template)()
+      val generator = new DocxMediator(gui,template)
       generator.generateDocx(details, validator)()
       messageUser("Done!")
     }

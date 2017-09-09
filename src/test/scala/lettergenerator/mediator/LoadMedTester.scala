@@ -50,16 +50,16 @@ class LoadMedTester extends FunSpec
     it("loads a docx template") {
       Given("a valid template formatter with a docx template file path")
       val mockTemplateFormatter = mock[TemplateFormatter]
-      val mockWordML = mock[WordprocessingMLPackage]
+      val mockTemplate = mock[Template]
       val validTemplatePath = validPath
       when(mockGui.templateFile).thenReturn(validTemplatePath)
-      when(mockTemplateFormatter.template).thenReturn(mockWordML)
+      when(mockTemplateFormatter.template).thenReturn(mockTemplate)
 
       When("the method is called")
       val templateOutput = lm.loadTemplate(mockTemplateFormatter)
 
       Then("it returns a WodprocessingMLPackage instance of the docx")
-      assert(templateOutput == mockWordML)
+      assert(templateOutput == mockTemplate)
     }
   }
 }

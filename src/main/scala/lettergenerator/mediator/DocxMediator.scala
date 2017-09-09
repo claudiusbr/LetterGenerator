@@ -1,23 +1,20 @@
 package lettergenerator
 package mediator
 
-import formatter.DocxMakerFormatter
+import formatter.{DocxMakerFormatter,Template,Details}
 import generators.DocxGenerator
 
-import org.docx4j.XmlUtils
-import org.docx4j.wml.Document
 import org.docx4j.openpackaging.io.SaveToZipFile
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage
-import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
 
 import java.util.{HashMap => JHashMap}
 
-class DocxMediator(gui: renderer.Wizard, docPack: WordprocessingMLPackage) {
+class DocxMediator(gui: renderer.Wizard, template: Template) {
   val formatter = new DocxMakerFormatter
-  val generator = new DocxGenerator(docPack)
+  val generator = new DocxGenerator(template)
   
   def generateDocx(details: Details, valMed: ValidationMediator)(
-    saver: SaveToZipFile = new SaveToZipFile(docPack)): Unit = {
+    saver: SaveToZipFile = new SaveToZipFile(template.docPack)): Unit = {
 
     details.tuples.foreach(generateDocx(_,valMed)(saver))
   }

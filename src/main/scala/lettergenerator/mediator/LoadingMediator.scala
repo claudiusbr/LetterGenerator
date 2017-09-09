@@ -14,6 +14,5 @@ class LoadingMediator(gui: renderer.Wizard) {
   }
     
   def loadTemplate(form: TemplateFormatter = new TemplateFormatter(
-    new DocxInput(gui.templateFile))): WordprocessingMLPackage = 
-      form.template
+    new DocxInput(gui.templateFile))): Template = form.template
 }

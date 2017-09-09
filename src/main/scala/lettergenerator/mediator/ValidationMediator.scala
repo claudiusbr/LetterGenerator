@@ -2,7 +2,7 @@ package lettergenerator
 package mediator
 
 import validators._
-import formatter.WordMLToStringFormatter
+import formatter.{WordMLFormatter,Details,Template}
 
 import scala.annotation.tailrec
 
@@ -61,8 +61,8 @@ class ValidationMediator(gui: renderer.Wizard) {
       }
   }
   
-  def validateTemplate(details: Details, docPack: WordprocessingMLPackage)(
-    templForm: WordMLToStringFormatter = new WordMLToStringFormatter(docPack)): Unit = {
+  def validateTemplate(details: Details, template: Template)(
+    templForm: WordMLFormatter = new WordMLFormatter(template)): Unit = {
     val docText: String = templForm.text
     val templVal = new TemplateValidator(docText)
     val headers: List[(String,String)] = gui.fnAlsoInTemplate match {

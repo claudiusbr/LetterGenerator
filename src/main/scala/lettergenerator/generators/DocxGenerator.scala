@@ -1,6 +1,8 @@
 package lettergenerator
 package generators
 
+import formatter.Template
+
 import org.docx4j.XmlUtils
 import org.docx4j.wml.Document
 import org.docx4j.openpackaging.io.SaveToZipFile
@@ -9,35 +11,24 @@ import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
 
 import java.util.{HashMap => JHashMap}
 
-/**
- *
- */
-class DocxGenerator(docPack: WordprocessingMLPackage) {
+class DocxGenerator(template: Template) {
 
   def generate(jmapDetails: JHashMap[String,String], fileName: String)(
-    saver: SaveToZipFile = new SaveToZipFile(docPack)): Unit = {
+    saver: SaveToZipFile = new SaveToZipFile(template.docPack)): Unit = {
 
-    val template: MainDocumentPart = getTemplateMainPart
-    val original: Document = getTemplateContents(template)
+    val templateMainPart: MainDocumentPart = template.mainDocumentPart
+    val original: Document = template.jaxbElement
     val newContents: Document = makeNewMainPartContents(original,jmapDetails)
-    setNewMainPartContents(template,newContents)
+    setNewMainPartContents(templateMainPart,newContents)
     saveNewDocx(fileName)(saver)
-    resetTemplateToOriginal(template, original)
-  }
-
-  private def getTemplateMainPart: MainDocumentPart = {
-    docPack.getMainDocumentPart
-  }
-
-  private def getTemplateContents(template: MainDocumentPart): Document = {
-    template.getJaxbElement
+    resetTemplateToOriginal(templateMainPart, original)
   }
 
   private def makeNewMainPartContents(original: Document,
     jmapDetails: JHashMap[String,String]): Document = {
 
-    val xml: String = XmlUtils.marshaltoString(original, true)
-    XmlUtils.unmarshallFromTemplate(xml, jmapDetails).asInstanceOf[Document]
+    val templateText: String = XmlUtils.marshaltoString(original, true)
+    XmlUtils.unmarshallFromTemplate(templateText, jmapDetails).asInstanceOf[Document]
   }
 
   private def setNewMainPartContents(template: MainDocumentPart, replacement: Document): Unit = {

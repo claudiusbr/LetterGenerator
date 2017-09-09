@@ -3,7 +3,7 @@ package mediator
 
 import renderer.Wizard
 import validators._
-import formatter.WordMLToStringFormatter
+import formatter.{WordMLFormatter,Details,Template}
 
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 
@@ -165,8 +165,8 @@ class ValMedTester extends FunSpec
   
   describe("the validateTemplate method") {
 
-    val mockTempl: WordprocessingMLPackage = mock[WordprocessingMLPackage]
-    val mockTemplForm: WordMLToStringFormatter = mock[WordMLToStringFormatter]
+    val mockTempl: Template = mock[Template]
+    val mockTemplForm: WordMLFormatter = mock[WordMLFormatter]
     
     val tuplesWithFileName: List[Map[String,String]] = List(
       Map("filename" -> "TheFox") ++ details.tuples.head,
