@@ -3,46 +3,12 @@ TODOs
 
 Refactor
 --------
-- make methods smaller and stop this thing of 'one method calling the next'.
-  It's making for really large method signatures. Instead, have sets of small
-  methods and get them all called by the main method (this applies for both
-  InteractionMediator and DocxMaker)
-  - done.
-- this may have made DocxMaker a bit too big. Examine whether it's worth
-  creating a new entity.
-- make each method in InteractionMediator a standalone one and make one method
-  responsible for calling them and checking if they are ok, or if they returned
-  an exception, and communicate any relevant details to the user. E.g.:
-  ```
-  // have all methods return a boolean
-  coordinate() {
-    if (validatePaths) {
-      messageUser("Files exist")
-      if(loadDetails) {
-        messageUser("details loaded")
-        if (validateDetails) {
-          
-        } else {
-          messageUser("could not validate details")
-        }
-      } else {messageUser("could not load details. make sure they are correct")}
-    } else {messageUser("check the ??? file")}
-  }
-
-  // have all methods return a string, and allow them to throw 
-  // exceptions which can then be sent to the user
-  try for (method <- InteractionMediator.methods) {// or something like that (reflection, a method collection, etc)
-      messageUser(method)
-  } catch {
-    case e: Throwable => alertUser({
-      import java.io._
-      val s = new StringWriter
-      e.printStackTrace(new PrintWriter(s))
-      alertUser(s.toString)
-    })
-  }
-  ```
-
+- Other refactoring points are done, or I changed my mind about them. One that
+  seems to still be baffling me though is the DocxMediator, which I am unable
+  to test due to it using too complex object, which call on final methods and
+  cannot be stubbed, for example. Test the base entities instead, and think of
+  DocxMediator as a main method, rather than a component. Something to think
+  about, but for now the TODO is to test all the base units.
 - Is there a way to make multithreading work for us when generating the docx?
   As in, is it possible to create several DocxMakers, one per thread, each with
   its own copy of the template and a chunk of the details file to save
