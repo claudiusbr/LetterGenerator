@@ -16,14 +16,13 @@ class DocxMediator(gui: renderer.Wizard, docPack: WordprocessingMLPackage) {
   val formatter = new DocxMakerFormatter
   val generator = new DocxGenerator(docPack)
   
-  def makeManyDocx(details: Details, valMed: ValidationMediator)(
+  def generateDocx(details: Details, valMed: ValidationMediator)(
     saver: SaveToZipFile = new SaveToZipFile(docPack)): Unit = {
 
-    details.tuples.foreach(makeSingleDocx(_,valMed)(saver))
-    gui.message("Done!")
+    details.tuples.foreach(generateDocx(_,valMed)(saver))
   }
   
-  private def makeSingleDocx(detailsTuple: Map[String,String], 
+  def generateDocx(detailsTuple: Map[String,String], 
     valMed: ValidationMediator)(saver: SaveToZipFile): Unit = {
 
     val detailsAsJMap = formatter.prepareMap(

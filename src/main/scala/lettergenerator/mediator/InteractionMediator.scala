@@ -48,7 +48,8 @@ class InteractionMediator extends renderer.Interactor {
       val docPack: WordprocessingMLPackage = loader.loadTemplate()
       validator.validateDetails(details)()
       val generator = new DocxMediator(gui,docPack)
-      generator.makeManyDocx(details, validator)()
+      generator.generateDocx(details, validator)()
+      messageUser("Done!")
     }
   }
 }
