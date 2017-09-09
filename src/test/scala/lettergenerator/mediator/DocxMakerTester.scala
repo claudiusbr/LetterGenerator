@@ -2,6 +2,7 @@ package lettergenerator
 package mediator
 
 import renderer.Wizard
+import formatter.Template
 
 import org.docx4j.XmlUtils
 import org.docx4j.wml.Document
@@ -19,51 +20,6 @@ import org.scalatest.mockito.MockitoSugar
 class DocxMakerTester extends FunSpec
   with GivenWhenThen with MockitoSugar {
   
-  val mockGui = mock[Wizard]
-  val mockValMed = mock[ValidationMediator]
-  val mockDocPack = mock[WordprocessingMLPackage]
-  val mockSaver = mock[SaveToZipFile]
-  val mockMain = mock[MainDocumentPart]
-  val mockDocument = mock[Document]
-  
-  val tuples: List[Map[String,String]] = List(
-    Map("name" -> "The Quick Brown Fox", 
-      "action" -> "Jumped Over The Lazy Dog",
-      "consequence" -> "earned +35XP"),
-
-    Map("name" -> "The Lazy Dog",
-        "action" -> "Was Jumped Over By The Quick Brown Fox",
-        "consequence" -> "Had To Re-evaluate His Life Choices"))
-  val headers: Array[String] = tuples.head.keys.toArray
-  
-  val dmkr = new DocxMediator(mockGui,mockDocPack)
-
-  when(mockGui.fnAlsoInTemplate).thenReturn(true)
-  when(mockGui.fNameColumn).thenReturn("name")
-  
-  when(mockValMed.fileNameIfDuplicate(
-    anyString(), anyString(), anyInt()))
-      .thenReturn("SomeName")
-  
-  when(mockDocPack.getMainDocumentPart).thenReturn(mockMain)
-  when(mockMain.getJaxbElement).thenReturn(mockDocument)
-  
-  
-  describe("the makeManyDocx method") {
-    it("should generate many docx"){
-      Given("details with two tuples")
-      When("the method is called")
-      Then("it should generate many docx")
-    }
-  }
-
-  describe("the makeSingleDocx method") {
-    it("should make a single docx"){
-      Given("single tuple of details")
-      When("the method is called")
-      Then("it should create a single Docx")
-    }
-  }
 }
 
 
