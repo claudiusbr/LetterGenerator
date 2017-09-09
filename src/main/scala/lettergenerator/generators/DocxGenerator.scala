@@ -1,7 +1,7 @@
 package lettergenerator
 package generators
 
-import formatter.Template
+import formatter.{Template,WordMLFormatter}
 
 import org.docx4j.XmlUtils
 import org.docx4j.wml.Document
@@ -14,21 +14,21 @@ import java.util.{HashMap => JHashMap}
 class DocxGenerator(template: Template) {
 
   def generate(jmapDetails: JHashMap[String,String], fileName: String)(
-    saver: SaveToZipFile = new SaveToZipFile(template.docPack)): Unit = {
+    saver: SaveToZipFile = new SaveToZipFile(template.docPack),
+    formatter: WordMLFormatter = new WordMLFormatter(template)): Unit = {
 
     val templateMainPart: MainDocumentPart = template.mainDocumentPart
     val original: Document = template.jaxbElement
-    val newContents: Document = makeNewMainPartContents(original,jmapDetails)
+    val newContents: Document = makeNewMainPartContents(jmapDetails, formatter)
     setNewMainPartContents(templateMainPart,newContents)
     saveNewDocx(fileName)(saver)
     resetTemplateToOriginal(templateMainPart, original)
   }
 
-  private def makeNewMainPartContents(original: Document,
-    jmapDetails: JHashMap[String,String]): Document = {
+  private def makeNewMainPartContents(jmapDetails: JHashMap[String,String],
+    formatter: WordMLFormatter): Document = {
 
-    val templateText: String = XmlUtils.marshaltoString(original, true)
-    XmlUtils.unmarshallFromTemplate(templateText, jmapDetails).asInstanceOf[Document]
+    formatter.replaceTextVariablesWith(jmapDetails)
   }
 
   private def setNewMainPartContents(template: MainDocumentPart, replacement: Document): Unit = {
