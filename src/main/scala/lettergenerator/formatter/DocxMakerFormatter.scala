@@ -15,12 +15,13 @@ class DocxMakerFormatter {
     }
   }
   
-  def fileName(details: Map[String,String],
-    fileNameColumn: String): String = details.collectFirst({
+  def fileName(details: Map[String,String], fileNameColumn: String): String = {
+    details.collectFirst({
       case (k: String,v: String) if k == fileNameColumn => v
     }) match {
       case Some(file) => file
       case None => "Output"
     }
-  
+
+  }
 }

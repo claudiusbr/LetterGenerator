@@ -31,7 +31,9 @@ class DocxGenerator(template: Template) {
     formatter.replaceTextVariablesWith(jmapDetails)
   }
 
-  private def setNewMainPartContents(template: MainDocumentPart, replacement: Document): Unit = {
+  private def setNewMainPartContents(template: MainDocumentPart, 
+    replacement: Document): Unit = {
+
     template.setJaxbElement(replacement)
   }
 

@@ -9,9 +9,14 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 
 import java.util.{HashMap => JHashMap}
 
-class DocxMediator(gui: renderer.Wizard, template: Template) {
-  val formatter = new DocxMakerFormatter
-  val generator = new DocxGenerator(template)
+class DocxMediator(gui: renderer.Wizard, template: Template,
+  formatter: DocxMakerFormatter, generator: DocxGenerator) {
+  
+  def this(gui: renderer.Wizard, template: Template,
+    formatter: DocxMakerFormatter = new DocxMakerFormatter) {
+
+    this(gui,template,new DocxMakerFormatter,new DocxGenerator(template))
+  }
   
   def generateDocx(details: Details, valMed: ValidationMediator)(
     saver: SaveToZipFile = new SaveToZipFile(template.docPack)): Unit = {
