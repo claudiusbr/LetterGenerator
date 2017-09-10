@@ -11,7 +11,7 @@ import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
 
 import java.util.{HashMap => JHashMap}
 
-class DocxGenerator(template: Template) {
+class DocxGenerator(template: Template) extends Generator(template) {
 
   def generate(jmapDetails: JHashMap[String,String], fileName: String)(
     saver: SaveToZipFile = new SaveToZipFile(template.docPack),

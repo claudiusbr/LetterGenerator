@@ -1,4 +1,5 @@
-package lettergenerator.formatter
+package lettergenerator
+package formatter
 
 import java.util.{HashMap => JHashMap}
 

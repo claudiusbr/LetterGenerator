@@ -2,7 +2,7 @@ package lettergenerator
 package mediator
 
 import formatter.{DocxMakerFormatter,Template,Details}
-import generators.DocxGenerator
+import generators._
 
 import org.docx4j.openpackaging.io.SaveToZipFile
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage
@@ -10,7 +10,7 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 import java.util.{HashMap => JHashMap}
 
 class DocxMediator(gui: renderer.Wizard, template: Template,
-  formatter: DocxMakerFormatter, generator: DocxGenerator) {
+  formatter: DocxMakerFormatter, generator: Generator) {
   
   def this(gui: renderer.Wizard, template: Template,
     formatter: DocxMakerFormatter = new DocxMakerFormatter) {
