@@ -84,15 +84,22 @@ class ValidationMediator(gui: renderer.Wizard) {
     }
   }
 
-  @tailrec
-  final def fileNameIfDuplicate(
+
+  def fileNameIfDuplicate(
     name: String, extension: String, count: Int = 0): String = {
+    getFileName(name,extension,count)
+  }
+
+  @tailrec
+  private final def getFileName(
+    name: String, extension: String, count: Int = 0): String = {
+
     val destination: String = gui.destinationFolder
     val increment = count + 1
     validatePath(destination+"/"+name+".docx") match {
       case Some(_) => 
         validatePath(destination+"/"+name+increment+".docx") match {
-          case Some(_) => fileNameIfDuplicate(name,extension,increment)
+          case Some(_) => getFileName(name,extension,increment)
           case None => destination+"/"+name+increment+".docx"
         }
       case None => destination+"/"+name+".docx"
@@ -100,23 +107,3 @@ class ValidationMediator(gui: renderer.Wizard) {
   }
   
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
