@@ -8,7 +8,7 @@ import org.scalatest.FunSpec
 class ErrorMsgFactoryTester extends FunSpec with
   GivenWhenThen with MockitoSugar {
   
-  val errorMsg= ErrorMessageFactory
+  val errorMsg = ErrorMessageFactory
   
   describe("the apply method") {
     

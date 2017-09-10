@@ -12,23 +12,17 @@ import org.scalatest.mockito.MockitoSugar
 
 class LoadMedTester extends FunSpec 
   with GivenWhenThen with MockitoSugar {
+
+  val testObjects = new TestObjects
   
-  val mockGui: Wizard = mock[Wizard]
+  val mockGui: Wizard = testObjects.mockGui
   val mockDetailsFormatter: DetailsFormatter = mock[DetailsFormatter]
   
   val lm = new LoadingMediator(mockGui)
 
   val validPath = "./valid/path"
 
-  val detailsList: List[Map[String,String]] = List(
-    Map("name" -> "The Quick Brown Fox", 
-      "action" -> "Jumped Over The Lazy Dog",
-      "consequence" -> "+35XP"),
-
-    Map("name" -> "The Lazy Dog",
-        "action" -> "Was Jumped Over By The Quick Brown Fox",
-        "consequence" -> "Had To Re-evaluate His Life Choices"))
-
+  val detailsList: List[Map[String,String]] = testObjects.tuples
   
   when(mockDetailsFormatter.details).thenReturn(detailsList)
   

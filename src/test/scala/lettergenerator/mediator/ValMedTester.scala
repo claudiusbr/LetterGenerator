@@ -16,7 +16,9 @@ import org.scalatest.mockito.MockitoSugar
 class ValMedTester extends FunSpec 
   with GivenWhenThen with MockitoSugar {
   
-  val mockGui: Wizard = mock[Wizard]
+  val testObjects: TestObjects = new TestObjects
+
+  val mockGui: Wizard = testObjects.mockGui
   val mockPathValidator: PathValidator = mock[PathValidator]
   
   val vm = new ValidationMediator(mockGui)
@@ -24,19 +26,10 @@ class ValMedTester extends FunSpec
   val path = "./valid/path"
   val otherPath = "./some/path"
 
+  val tuples: List[Map[String,String]] = testObjects.tuples
+  val headers: Array[String] = testObjects.headers
 
-  val tuples: List[Map[String,String]] = List(
-    Map("name" -> "The Quick Brown Fox", 
-      "action" -> "Jumped Over The Lazy Dog",
-      "consequence" -> "earned +35XP"),
-
-    Map("name" -> "The Lazy Dog",
-        "action" -> "Was Jumped Over By The Quick Brown Fox",
-        "consequence" -> "Had To Re-evaluate His Life Choices"))
-        
-  val headers: Array[String] = tuples.head.keys.toArray
-
-  val details = new Details(headers, tuples) 
+  val details: Details = testObjects.details
   
   when(mockPathValidator.validate(
     Matchers.matches(path)))

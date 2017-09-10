@@ -9,8 +9,10 @@ import org.scalatest.mockito.MockitoSugar
 
 class IntMedTester extends FunSpec 
   with GivenWhenThen with MockitoSugar {
+
+  val testObjects = new TestObjects
   
-  val mockGui: Wizard = mock[Wizard]
+  val mockGui: Wizard = testObjects.mockGui
   
   val im = new InteractionMediator()
 
