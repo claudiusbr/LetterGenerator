@@ -3,12 +3,6 @@ TODOs
 
 Refactor
 --------
-- Other refactoring points are done, or I changed my mind about them. One that
-  seems to still be baffling me though is the DocxMediator, which I am unable
-  to test due to it using too complex object, which call on final methods and
-  cannot be stubbed, for example. Test the base entities instead, and think of
-  DocxMediator as a main method, rather than a component. Something to think
-  about, but for now the TODO is to test all the base units.
 - Is there a way to make multithreading work for us when generating the docx?
   As in, is it possible to create several DocxMakers, one per thread, each with
   its own copy of the template and a chunk of the details file to save
@@ -18,6 +12,10 @@ Refactor
   depending on the block size, as in there could be more than one file in the
   same block, depending on how big the block is...? In any case, these are
   "ideas" for now, so still need to verify if they are possible.
+
+- make a branch where all the packages are organised in a more modular rather
+  than layered fashion, e.g. all Template Docx entities together, then all the
+  Details/Csv, then one for all the hybrid stuff.
 
 
 Test Scenarios
@@ -81,7 +79,6 @@ Set one thread to message the user, another to work on the logic. Something
 like a status bar, or three dots.
 
 
-Apply chain of responsibility
------------------------------
-- InteractionMediator is doing too much. See if it can be split into classes
-  which conform to the Chain Of Responsibility pattern, for example
+Rewrite the whole thing from scratch
+-------------------------------------
+- as per comment on 10/Sep/2017.
