@@ -27,8 +27,12 @@ class DocxMediator(gui: renderer.Wizard, template: Template,
   def generateDocx(detailsTuple: Map[String,String], 
     valMed: ValidationMediator)(saver: SaveToZipFile): Unit = {
 
-    val detailsAsJMap = formatter.prepareMap(
-        detailsTuple,gui.fnAlsoInTemplate,gui.fNameColumn)
+    val fileNameColumn: String = gui.fnAlsoInTemplate match {
+      case true => gui.fNameColumn
+      case false => ""
+    }
+
+    val detailsAsJMap = formatter.prepareMap(detailsTuple,fileNameColumn)
 
     val tempFileName = formatter.fileName(detailsTuple,gui.fNameColumn)
     val finalFileName = valMed.fileNameIfDuplicate(tempFileName, ".docx")

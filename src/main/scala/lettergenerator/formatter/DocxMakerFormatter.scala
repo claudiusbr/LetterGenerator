@@ -5,20 +5,27 @@ import java.util.{HashMap => JHashMap}
 
 class DocxMakerFormatter {
 
-  def prepareMap(details: Map[String,String],
-    fileNameAlsoInTemplate: Boolean,
-    fileNameColumn: String): JHashMap[String,String] = {
+  /**
+   * returns the details tuple Map as a JHashMap, filtering out
+   * the file name column if it is provided
+   */
+  def prepareMap(detailsTuple: Map[String,String],
+    columnNametoFilterOut: String): JHashMap[String,String] = {
+
     import scala.collection.JavaConverters._
 
-    fileNameAlsoInTemplate match {
-      case true => new JHashMap(details.asJava)
-      case false => new JHashMap(details.filter(_._1 != fileNameColumn).asJava)
-    }
+    new JHashMap(detailsTuple.filter(_._1 != columnNametoFilterOut).asJava)
+
   }
   
-  def fileName(details: Map[String,String], fileNameColumn: String): String = {
-    details.collectFirst({
-      case (k: String,v: String) if k == fileNameColumn => v
+  /**
+   * Returns the file name provided by the user in the details
+   * file for a specific tuple. If no column is provided for the 
+   * file name, it returns the string 'Output'.
+   */
+  def fileName(detailsTuple: Map[String,String], fileNameColumn: String): String = {
+    detailsTuple.collectFirst({
+      case (column: String, value: String) if column == fileNameColumn => value
     }) match {
       case Some(file) => file
       case None => "Output"
