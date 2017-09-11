@@ -1,6 +1,12 @@
 Comments
 ========
 
+11/Sep/2017
+-----------
+- fix red test for DocxMedTester.
+  - I feel silly...
+
+
 10/Sep/2017
 ----------
 ### Package Organisation

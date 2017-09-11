@@ -3,8 +3,6 @@ TODOs
 
 Refactor
 --------
-- fix red test for DocxMedTester.
- 
 - Is there a way to make multithreading work for us when generating the docx?
   As in, is it possible to create several DocxMakers, one per thread, each with
   its own copy of the template and a chunk of the details file to save

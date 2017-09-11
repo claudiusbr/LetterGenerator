@@ -41,7 +41,7 @@ class DocxMediatorTester extends FunSpec
   when(mockGui.fnAlsoInTemplate).thenReturn(true)
   when(mockGui.fNameColumn).thenReturn(testObjects.details.tuples.head.keys.head)
 
-  when(mockDMForm.prepareMap(detailsSingleTuple, mockGui.fNameColumn))
+  when(mockDMForm.prepareMap(detailsSingleTuple, ""))
       .thenReturn(singleTupleAsJMap)
   when(mockDMForm.fileName(detailsSingleTuple,mockGui.fNameColumn))
     .thenReturn("filename")

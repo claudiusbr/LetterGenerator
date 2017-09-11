@@ -11,7 +11,7 @@ import java.util.{HashMap => JHashMap}
 
 class DocxMediator(gui: renderer.Wizard, template: Template,
   formatter: DocxMakerFormatter, generator: Generator) {
-  
+
   def this(gui: renderer.Wizard, template: Template,
     formatter: DocxMakerFormatter = new DocxMakerFormatter) {
 
@@ -27,12 +27,7 @@ class DocxMediator(gui: renderer.Wizard, template: Template,
   def generateDocx(detailsTuple: Map[String,String], 
     valMed: ValidationMediator)(saver: SaveToZipFile): Unit = {
 
-    val fileNameColumn: String = gui.fnAlsoInTemplate match {
-      case true => ""
-      case false => gui.fNameColumn
-    }
-
-    val detailsAsJMap = formatter.prepareMap(detailsTuple,fileNameColumn)
+    val detailsAsJMap = formatter.prepareMap(detailsTuple,columnNameToFilterOut)
 
     val tempFileName = formatter.fileName(detailsTuple,gui.fNameColumn)
     val finalFileName = valMed.fileNameIfDuplicate(tempFileName, ".docx")
@@ -41,4 +36,10 @@ class DocxMediator(gui: renderer.Wizard, template: Template,
     
     generator.generate(detailsAsJMap,finalFileName)(saver)
   }
+
+  private def columnNameToFilterOut: String = gui.fnAlsoInTemplate match {
+    case true => ""
+    case false => gui.fNameColumn
+  }
+  
 }
