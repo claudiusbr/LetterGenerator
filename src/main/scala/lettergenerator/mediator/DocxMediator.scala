@@ -28,8 +28,8 @@ class DocxMediator(gui: renderer.Wizard, template: Template,
     valMed: ValidationMediator)(saver: SaveToZipFile): Unit = {
 
     val fileNameColumn: String = gui.fnAlsoInTemplate match {
-      case true => gui.fNameColumn
-      case false => ""
+      case true => ""
+      case false => gui.fNameColumn
     }
 
     val detailsAsJMap = formatter.prepareMap(detailsTuple,fileNameColumn)
