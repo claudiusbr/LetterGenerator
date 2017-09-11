@@ -7,19 +7,40 @@ import org.mockito.{Mockito, Matchers}
 import org.mockito.AdditionalMatchers.not
 import org.scalatest.mockito.MockitoSugar
 
+import java.util.{HashMap => JHashMap}
+
 class DocxMkrFmtrTester extends FunSpec
   with MockitoSugar with GivenWhenThen {
   
+  val testObjects = new TestObjects
   val dmForm = new DocxMakerFormatter
   
   describe("the prepareMap method") {
-    it("returns a JHashMap with the file name column included") {
-      Given("the value true for fileNameAlsoInTemplate")
-      val fnInTemplate: Boolean = true
+    it("returns a JHashMap with all the columns of the original map") {
+      Given("a details tuple")
+      val detailsTuple: Map[String,String] = testObjects.tuples.head
       
-      When("")
+      When("the method is called with an empty string")
+      val jmap: JHashMap[String,String] = dmForm.prepareMap(detailsTuple, "")
+      
+      Then("it returns a JHashMap with all the columns")
+      import scala.collection.JavaConverters._
+      assert(jmap.keySet().asScala == testObjects.headers.toSet)
+
     }
-    it("returns a JHashMap without the file name column") {}
+
+    it("returns a JHashMap without the file name column") {
+      Given("a details tuple with a column to filter out")
+      val detailsTuple: Map[String,String] = testObjects.tuples.head
+      val columnToFilterOut: String = testObjects.headers.head
+      
+      When("the column to filter out is passed to the method as one of the arguments")
+      val jmap: JHashMap[String,String] = dmForm.prepareMap(detailsTuple, columnToFilterOut)
+      
+      Then("it returns a JHashMap without the column")
+      import scala.collection.JavaConverters._
+      assert(jmap.keySet().asScala == testObjects.headers.filter(_ != columnToFilterOut).toSet)
+    }
   }
 
   describe("the fileName method") {
