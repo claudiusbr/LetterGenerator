@@ -12,6 +12,11 @@ import java.util.{HashMap => JHashMap}
 class DocxMediator(gui: renderer.Wizard, template: Template,
   formatter: DocxMakerFormatter, generator: Generator) {
 
+  private val columnNameToFilterOut: String = gui.fnAlsoInTemplate match {
+    case true => ""
+    case false => gui.fNameColumn
+  }
+
   def this(gui: renderer.Wizard, template: Template,
     formatter: DocxMakerFormatter = new DocxMakerFormatter) {
 
@@ -37,9 +42,4 @@ class DocxMediator(gui: renderer.Wizard, template: Template,
     generator.generate(detailsAsJMap,finalFileName)(saver)
   }
 
-  private def columnNameToFilterOut: String = gui.fnAlsoInTemplate match {
-    case true => ""
-    case false => gui.fNameColumn
-  }
-  
 }

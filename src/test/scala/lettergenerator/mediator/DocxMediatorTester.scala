@@ -33,7 +33,6 @@ class DocxMediatorTester extends FunSpec
   val mockGen = mock[Generator]
   val mockVM = mock[ValidationMediator]
   val mockSaver = mock[SaveToZipFile]
-  val dm = new DocxMediator(mockGui,mockTempl,mockDMForm,mockGen)
 
   val detailsSingleTuple: Map[String,String] = testObjects.details.tuples.head
   val singleTupleAsJMap = new JHashMap[String,String](detailsSingleTuple.asJava)
@@ -48,7 +47,7 @@ class DocxMediatorTester extends FunSpec
 
   when(mockVM.fileNameIfDuplicate("filename", ".docx")).thenReturn("filename")
 
-  //when(mockGen.generate(singleTupleAsJMap,"filename")(mockSaver)).thenReturn()
+  val dm = new DocxMediator(mockGui,mockTempl,mockDMForm,mockGen)
   
   describe("the generateDocx method") {
     it("generates a single docx") {
