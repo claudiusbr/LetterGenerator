@@ -44,7 +44,27 @@ class DocxMkrFmtrTester extends FunSpec
   }
 
   describe("the fileName method") {
-    it("returns the file name chosen") {}
-    it("returns Output") {}
+    val detailsTuple: Map[String,String] = testObjects.tuples.head
+    it("returns the file name chosen") {
+      Given("the name of a column containing possible filenames")
+      val fileNameColumn: String = testObjects.headers.head
+      
+      When("they are passed to the method as arguments")
+      val fileName = dmForm.fileName(detailsTuple, fileNameColumn)
+      
+      Then("the method should return the value pertaining to the key which matches the column name")
+      assert(fileName == detailsTuple(fileNameColumn))
+    }
+
+    it("returns Output") {
+      Given("an empty column name")
+      val fileNameColumn: String = ""
+      
+      When("it is passed to the method as an argument")
+      val fileName = dmForm.fileName(detailsTuple, fileNameColumn)
+
+      Then("the method should return the \"Output\" string")
+      assert(fileName == "Output")
+    }
   }
 }
