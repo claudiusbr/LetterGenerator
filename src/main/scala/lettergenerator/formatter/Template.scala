@@ -8,7 +8,7 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
 
 class Template(val docPack: WordprocessingMLPackage) {
-  def mainDocumentPart: MainDocumentPart = docPack.getMainDocumentPart
+  val mainDocumentPart: MainDocumentPart = docPack.getMainDocumentPart
 
   def jaxbElement: Document  = mainDocumentPart.getJaxbElement
 
