@@ -29,8 +29,8 @@ class DetailsFormatter(input: Input) {
       val map = new mutable.HashMap[String,String]()
 
       tuple.indices.foreach(i => map(headers(i)) = tuple(i)
-          .replaceAll(s"$Separator",",")
-          .replaceAll("\"",""))
+        .replaceAll(s"$Separator",",")
+        .replaceAll("\"",""))
       
       det += map.toMap
     }
