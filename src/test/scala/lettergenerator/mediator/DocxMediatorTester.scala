@@ -22,7 +22,7 @@ import java.util.{HashMap => JHashMap}
 
 class DocxMediatorTester extends Tester {
 
-  val testObjects = new TestObjects
+  val testObjects = new TestObjects with TemplateTestObjects with DetailsTestObjects
   
   val mockGui = testObjects.mockGui
   val mockTempl = testObjects.mockTempl

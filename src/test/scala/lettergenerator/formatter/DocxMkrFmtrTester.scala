@@ -8,7 +8,7 @@ import java.util.{HashMap => JHashMap}
 
 class DocxMkrFmtrTester extends Tester {
   
-  val testObjects = new TestObjects
+  val testObjects = new TestObjects with DetailsTestObjects
   val dmForm = new DocxMakerFormatter
   
   describe("the prepareMap method") {

@@ -13,7 +13,7 @@ import org.mockito.AdditionalMatchers.not
 
 class ValMedTester extends Tester {
   
-  val testObjects: TestObjects = new TestObjects
+  val testObjects = new TestObjects with DetailsTestObjects
 
   val mockGui: Wizard = testObjects.mockGui
   val mockPathValidator: PathValidator = mock[PathValidator]

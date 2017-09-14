@@ -10,7 +10,7 @@ import org.mockito.Mockito.when
 
 class LoadMedTester extends Tester {
 
-  val testObjects = new TestObjects
+  val testObjects = new TestObjects with DetailsTestObjects
   
   val mockGui: Wizard = testObjects.mockGui
   val mockDetailsFormatter: DetailsFormatter = mock[DetailsFormatter]

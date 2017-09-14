@@ -7,7 +7,7 @@ import org.mockito.Mockito
 
 class IntMedTester extends Tester {
 
-  val testObjects = new TestObjects
+  val testObjects = new TestObjects 
   
   val mockGui: Wizard = testObjects.mockGui
   

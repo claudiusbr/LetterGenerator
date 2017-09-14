@@ -1,15 +1,13 @@
 package lettergenerator
 package formatter
 
-import loader.Input
-
 import org.mockito.Mockito.doReturn
 
 class DetailsFmtrTester extends Tester {
   
-  val testObjects = new TestObjects
+  val testObjects = new TestObjects with DetailsTestObjects
   
-  val mockInput = mock[Input]
+  val mockInput = testObjects.mockInput
 
   val detailsFileContents: Iterator[String] = Seq[String](
     "name,action,consequence",

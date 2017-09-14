@@ -5,7 +5,7 @@ import org.scalatest.{FunSpec, GivenWhenThen}
 
 class DetailsTester extends FunSpec with GivenWhenThen {
   
-  val testObjects = new TestObjects
+  val testObjects = new TestObjects with DetailsTestObjects
   
   describe("the auxiliary constructor") {
     it("should pass the keys of the head of the tuples list as headers if none is provided") {

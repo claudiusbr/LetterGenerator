@@ -1,24 +1,16 @@
 package lettergenerator
 package formatter
 
-import org.mockito.Mockito.when
 import org.mockito.{Mockito, Matchers}
-
-import org.docx4j.XmlUtils
-import org.docx4j.wml.Document
-import org.docx4j.openpackaging.io.SaveToZipFile
-import org.docx4j.openpackaging.packages.WordprocessingMLPackage
-import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
 
 class TemplateTester extends Tester {
   
-  val mockJaxbElement = mock[Document]
-  val mockNewJaxbElement = mock[Document]
-  val mockMainPart = mock[MainDocumentPart]
-  val mockDocPack = mock[WordprocessingMLPackage]
+  val testObjects = new TestObjects with TemplateTestObjects
 
-  when(mockDocPack.getMainDocumentPart).thenReturn(mockMainPart)
-  when(mockMainPart.getJaxbElement).thenReturn(mockJaxbElement)
+  val mockJaxbElement = testObjects.mockJaxbElement
+  val mockNewJaxbElement = testObjects.mockNewJaxbElement
+  val mockMainPart = testObjects.mockMainPart
+  val mockDocPack = testObjects.mockDocPack
   
   val template = new Template(mockDocPack)
   
