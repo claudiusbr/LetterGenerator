@@ -1,12 +1,7 @@
 package lettergenerator
 package validators
 
-import org.scalatest.mockito.MockitoSugar
-import org.scalatest.GivenWhenThen
-import org.scalatest.FunSpec
-
-class ErrorMsgFactoryTester extends FunSpec with
-  GivenWhenThen with MockitoSugar {
+class ErrorMsgFactoryTester extends Tester {
   
   val errorMsg = ErrorMessageFactory
   

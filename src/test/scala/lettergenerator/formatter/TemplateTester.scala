@@ -1,10 +1,8 @@
 package lettergenerator
 package formatter
 
-import org.scalatest.{FunSpec, GivenWhenThen}
 import org.mockito.Mockito.when
 import org.mockito.{Mockito, Matchers}
-import org.scalatest.mockito.MockitoSugar
 
 import org.docx4j.XmlUtils
 import org.docx4j.wml.Document
@@ -12,8 +10,7 @@ import org.docx4j.openpackaging.io.SaveToZipFile
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
 
-class TemplateTester extends FunSpec 
-  with GivenWhenThen with MockitoSugar {
+class TemplateTester extends Tester {
   
   val mockJaxbElement = mock[Document]
   val mockNewJaxbElement = mock[Document]

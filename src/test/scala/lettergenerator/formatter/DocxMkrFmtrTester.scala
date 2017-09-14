@@ -1,15 +1,12 @@
 package lettergenerator
 package formatter
 
-import org.scalatest.{FunSpec, GivenWhenThen}
 import org.mockito.Mockito.when
 import org.mockito.{Mockito, Matchers}
-import org.scalatest.mockito.MockitoSugar
 
 import java.util.{HashMap => JHashMap}
 
-class DocxMkrFmtrTester extends FunSpec
-  with MockitoSugar with GivenWhenThen {
+class DocxMkrFmtrTester extends Tester {
   
   val testObjects = new TestObjects
   val dmForm = new DocxMakerFormatter

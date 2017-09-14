@@ -13,17 +13,14 @@ import org.docx4j.openpackaging.io.SaveToZipFile
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
 
-import org.scalatest.{FunSpec, GivenWhenThen}
 import org.mockito.Mockito.when
 import org.mockito.Mockito
 import org.mockito.Matchers.{anyString,anyInt}
 import org.mockito.AdditionalMatchers.not
-import org.scalatest.mockito.MockitoSugar
 
 import java.util.{HashMap => JHashMap}
 
-class DocxMediatorTester extends FunSpec
-  with GivenWhenThen with MockitoSugar {
+class DocxMediatorTester extends Tester {
 
   val testObjects = new TestObjects
   

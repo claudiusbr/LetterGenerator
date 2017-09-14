@@ -3,12 +3,9 @@ package mediator
 
 import renderer.Wizard
 
-import org.scalatest.{FunSpec, GivenWhenThen}
 import org.mockito.Mockito
-import org.scalatest.mockito.MockitoSugar
 
-class IntMedTester extends FunSpec 
-  with GivenWhenThen with MockitoSugar {
+class IntMedTester extends Tester {
 
   val testObjects = new TestObjects
   

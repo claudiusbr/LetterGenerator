@@ -3,12 +3,9 @@ package formatter
 
 import loader.Input
 
-import org.scalatest.{GivenWhenThen,FunSpec}
-import org.scalatest.mockito.MockitoSugar
 import org.mockito.Mockito.doReturn
 
-class DetailsFmtrTester extends FunSpec 
-  with GivenWhenThen with MockitoSugar {
+class DetailsFmtrTester extends Tester {
   
   val testObjects = new TestObjects
   

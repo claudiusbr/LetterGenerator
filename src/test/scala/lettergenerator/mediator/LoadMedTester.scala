@@ -6,12 +6,9 @@ import formatter._
 
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 
-import org.scalatest.{FunSpec, GivenWhenThen}
 import org.mockito.Mockito.when
-import org.scalatest.mockito.MockitoSugar
 
-class LoadMedTester extends FunSpec 
-  with GivenWhenThen with MockitoSugar {
+class LoadMedTester extends Tester {
 
   val testObjects = new TestObjects
   

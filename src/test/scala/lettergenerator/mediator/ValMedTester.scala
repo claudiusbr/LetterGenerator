@@ -7,14 +7,11 @@ import formatter.{WordMLFormatter,Details,Template}
 
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage
 
-import org.scalatest.{FunSpec, GivenWhenThen}
 import org.mockito.Mockito.when
 import org.mockito.{Mockito, Matchers}
 import org.mockito.AdditionalMatchers.not
-import org.scalatest.mockito.MockitoSugar
 
-class ValMedTester extends FunSpec 
-  with GivenWhenThen with MockitoSugar {
+class ValMedTester extends Tester {
   
   val testObjects: TestObjects = new TestObjects
 
