@@ -31,17 +31,17 @@ class DocxGenerator(template: Template) extends Generator(template) {
     formatter.replaceTextVariablesWith(jmapDetails)
   }
 
-  private def setNewMainPartContents(template: MainDocumentPart, 
+  private def setNewMainPartContents(templateMainPart: MainDocumentPart, 
     replacement: Document): Unit = {
 
-    template.setJaxbElement(replacement)
+    templateMainPart.setJaxbElement(replacement)
   }
 
   private def saveNewDocx(fileName: String)(saver: SaveToZipFile): Unit = {
     saver.save(fileName)
   }
 
-  private def resetTemplateToOriginal(template: MainDocumentPart, original: Document): Unit = {
-    template.setJaxbElement(original)
+  private def resetTemplateToOriginal(templateMainPart: MainDocumentPart, original: Document): Unit = {
+    templateMainPart.setJaxbElement(original)
   }
 }
