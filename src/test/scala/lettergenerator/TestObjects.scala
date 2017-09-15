@@ -28,15 +28,13 @@ trait DetailsTestObjects {
 
 
 trait TemplateTestObjects extends MockitoSugar {
-
+  import formatter.Template
   import org.docx4j.XmlUtils
   import org.docx4j.wml.Document
   import org.docx4j.openpackaging.io.SaveToZipFile
   import org.docx4j.openpackaging.packages.WordprocessingMLPackage
   import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
   import org.mockito.Mockito.when
-
-  val mockTempl = mock[formatter.Template]
 
   val mockJaxbElement = mock[Document]
   val mockNewJaxbElement = mock[Document]
@@ -45,4 +43,6 @@ trait TemplateTestObjects extends MockitoSugar {
 
   when(mockDocPack.getMainDocumentPart).thenReturn(mockMainPart)
   when(mockMainPart.getJaxbElement).thenReturn(mockJaxbElement)
+
+  val mockTempl = new Template(mockDocPack)
 }
