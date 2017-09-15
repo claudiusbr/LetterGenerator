@@ -54,7 +54,6 @@ class ValidationMediator(gui: renderer.Wizard) {
       } catch {
         case e: Throwable => {
           gui.message("Error")
-          e.printStackTrace()
           gui.alert(e.getLocalizedMessage)
           throw e
         }
@@ -77,7 +76,6 @@ class ValidationMediator(gui: renderer.Wizard) {
     } catch {
       case e: Throwable => {
         gui.message("Error on template validation")
-        e.printStackTrace()
         gui.message(errorMsgs(templVal).format(e.getLocalizedMessage))
         throw e
       }
