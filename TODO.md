@@ -1,18 +1,15 @@
 TODOs
 =====
 
+Something wrong with changing the details file after one is entered and a filename column is chosen
+---------------------------------------------------------------------------------------------------
+- An exception is being thrown. Analyse what it is.
+
+
 Refactor
 --------
-- Is there a way to make multithreading work for us when generating the docx?
-  As in, is it possible to create several DocxMakers, one per thread, each with
-  its own copy of the template and a chunk of the details file to save
-  documents to disk concurrently? Is it even possible to save more than one
-  document to disk at once? you can have multiple processors, but in a local
-  machine they are still written to disk one at a time... Or maybe it varies
-  depending on the block size, as in there could be more than one file in the
-  same block, depending on how big the block is...? In any case, these are
-  "ideas" for now, so still need to verify if they are possible.
-
+- Try to maker DocxGenerator smaller -- as shown by the test, it's still doing
+  too much.
 - make a branch where all the packages are organised in a more modular rather
   than layered fashion, e.g. all Template Docx entities together, then all the
   Details/Csv, then one for all the hybrid stuff.
@@ -28,7 +25,6 @@ Test Scenarios
     from the list, therefore giving it an empty list?
 - Test if user input can take special characters
 - Test ValidationMediator's duplicate file checker method;
-- Test DocxMakerFormatter;
 
 
 Check if the effort of saving the JaxbElement within draftSaveReset is really necessary
@@ -37,12 +33,6 @@ Check if the effort of saving the JaxbElement within draftSaveReset is really ne
   [this](https://www.docx4java.org/forums/docx-java-f6/which-methods-to-use-for-the-deprecated-ones-t2373.html):
   it seems `getJaxbElement` is deprecated. Replace it by `getContents()`
   whenever you can.
-
-
-
-Something wrong with changing the details file after one is entered and a filename column is chosen
----------------------------------------------------------------------------------------------------
-- An exception is being thrown. Analyse what it is.
 
 
 Validate "empty File name column" + "'File name also in template' box ticked" on submit
