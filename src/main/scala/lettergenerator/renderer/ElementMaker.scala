@@ -9,7 +9,7 @@ import java.io.File
  * to a mainframe
  */
 case class ElementMaker() {
-  def mkOpenFileElmts(
+  def makeOpenFileElements(
     label:String, 
     opener: FileChooser,
     textWidth: Int):(Label,TextField,Button) = {

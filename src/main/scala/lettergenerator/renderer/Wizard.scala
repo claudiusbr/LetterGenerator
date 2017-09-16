@@ -12,54 +12,52 @@ import javax.swing.filechooser.FileNameExtensionFilter
  * @param medium an Interactor object
  */
 class Wizard(medium: Interactor) extends MainFrame {
-  title = "Letter Generator" 
-  preferredSize = new Dimension(695,360)
+
   val TextWidth = 56
-  
+  val VShortGap: Int = 5
+  val VLargeGap: Int = 30
+  val HShortGap: Int = 3
+
   // for making the buttons, labels and textfields
   val elementMkr = ElementMaker()
   
   // for opening files and directories
-  private val csvOpener = new FileChooser(new File("."))
-  csvOpener.fileFilter = (new FileNameExtensionFilter("CSV (Comma Separated Values)","csv"))
-  private val docxOpener = new FileChooser(new File("."))
-  docxOpener.fileFilter = (new FileNameExtensionFilter("Word Document","docx"))
-  private val dirOpener = new FileChooser(new File("."))
-  dirOpener.fileSelectionMode = FileChooser.SelectionMode.DirectoriesOnly
+  private val csvOpener, docxOpener, dirOpener = new FileChooser(new File("."))
 
-  
   // source of letter header details
   private val (dtLbl, dtTxt, dtBtn) = 
-    elementMkr.mkOpenFileElmts("Please choose the file with the"
+    elementMkr.makeOpenFileElements("Please choose the file with the"
       + " details which will go on the letters", csvOpener, TextWidth)
 
   // drop down box for file name column      
   private var textChangeFlag = dtTxt.text
   private val fileNameColumn = new ComboBox(List[String]())
   private val fnLbl = elementMkr.label(" ") 
-  def fNameColumn: String = fileNameColumn.selection.item
   
   // check box to check if file name is also present in template
   // as a variable to be replaced
   private val fnAlsoInTemplate_ = new CheckBox("File name also part of letter")
-  fnAlsoInTemplate_.selected = false
-  def fnAlsoInTemplate: Boolean = fnAlsoInTemplate_.selected
   
   // source of letter template
   private val (tpltLbl, tpltTxt, tpltBtn) = 
-    elementMkr.mkOpenFileElmts("Please choose the file with the "
+    elementMkr.makeOpenFileElements("Please choose the file with the "
       + " template for the letters", docxOpener, TextWidth)
 
   // destination folder
   private val (destLbl, destTxt, destBtn) = 
-    elementMkr.mkOpenFileElmts("Please choose a destination " 
+    elementMkr.makeOpenFileElements("Please choose a destination " 
       + "folder for the letters", dirOpener, TextWidth)
       
   private val msg: Label = elementMkr.label("Ready")
   
-  def message(text: String): Unit = msg.text = text
-
-  def alert(text: String): Unit = Dialog.showMessage(this,text,"Alert")
+  title = "Letter Generator" 
+  preferredSize = new Dimension(695,360)
+  
+  fnAlsoInTemplate_.selected = false
+  
+  csvOpener.fileFilter = (new FileNameExtensionFilter("CSV (Comma Separated Values)","csv"))
+  docxOpener.fileFilter = (new FileNameExtensionFilter("Word Document","docx"))
+  dirOpener.fileSelectionMode = FileChooser.SelectionMode.DirectoriesOnly
   
   listenTo(dtTxt)
 
@@ -69,10 +67,6 @@ class Wizard(medium: Interactor) extends MainFrame {
   setMaxHeight(tpltTxt)
   setMaxHeight(destTxt)
   setMaxHeight(fileNameColumn)
-  
-  val VShortGap: Int = 5
-  val VLargeGap: Int = 30
-  val HShortGap: Int = 3
   
   contents = new BoxPanel(Orientation.Vertical) {
     contents += new BoxPanel(Orientation.Vertical) {
@@ -136,8 +130,15 @@ class Wizard(medium: Interactor) extends MainFrame {
       e.xLayoutAlignment = 0.0
     border = Swing.EmptyBorder(10, 10, 10, 10)
   }
-
   
+  def message(text: String): Unit = msg.text = text
+
+  def alert(text: String): Unit = Dialog.showMessage(this,text,"Alert")
+  
+  def fNameColumn: String = fileNameColumn.selection.item
+
+  def fnAlsoInTemplate: Boolean = fnAlsoInTemplate_.selected
+
   def setMaxHeight(comp: Component) = 
     comp.maximumSize = new Dimension(Short.MaxValue, comp.preferredSize.height)
   
