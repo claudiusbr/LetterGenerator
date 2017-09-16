@@ -1,6 +1,13 @@
 TODOs
 =====
 
+Write a README and a user guide
+-------------------------------
+- write a nicer readme 
+- create a documentation folder
+- write step-by-step user guide
+
+
 Something wrong with changing the details file after one is entered and a filename column is chosen
 ---------------------------------------------------------------------------------------------------
 - An exception is being thrown. Analyse what it is.
