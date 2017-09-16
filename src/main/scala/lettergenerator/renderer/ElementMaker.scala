@@ -1,23 +1,29 @@
 package lettergenerator
 package renderer
 
-import scala.swing._
+import scala.swing.{CheckBox,ComboBox,FileChooser,Label,TextField,Button}
 import java.io.File
 
 /**
  * This class is responsible for making elements to be added
  * to a mainframe
  */
-case class ElementMaker() {
+class ElementMaker() {
   def makeOpenFileElements(
     label:String, 
     opener: FileChooser,
     textWidth: Int):(Label,TextField,Button) = {
 
-    val tx = textField(textWidth)
+    val tx: TextField = makeTextField(textWidth)
 
-    (this.label(label), tx, button("Open",tx.text = getFile(opener)))
+    (this.makeLabel(label), tx, makeButton("Open",tx.text = getFile(opener)))
   }
+  
+  def makeFileChooser(): FileChooser = new FileChooser(new File("."))
+  
+  def makeComboBox(): ComboBox[String] = new ComboBox(Seq[String]())
+  
+  def makeCheckBox(msg: String): CheckBox = new CheckBox(msg)
   
   def getFile(opener: FileChooser): String = {
     if (opener.showOpenDialog(null) == FileChooser.Result.Approve)
@@ -25,10 +31,9 @@ case class ElementMaker() {
     else ""
   }
   
-  def button(text: String, action: => Unit): Button = Button(text)(action)
+  def makeButton(text: String, action: => Unit): Button = Button(text)(action)
   
-  def label(text: String): Label = new Label(text)
+  def makeLabel(text: String): Label = new Label(text)
   
-  def textField(width: Int): TextField = new TextField { columns = width }
-
+  def makeTextField(width: Int): TextField = new TextField { columns = width }
 }
