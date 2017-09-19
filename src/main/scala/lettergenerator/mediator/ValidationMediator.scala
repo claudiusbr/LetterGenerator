@@ -47,7 +47,7 @@ class ValidationMediator(gui: renderer.Wizard) {
         for (map <- details.tuples) {
           detailsValidator.applyRecursion[Map[String,String]](
             List((map.values.mkString(" "),map)), 
-            gui.message("Details are valid."),
+            gui.message("Details are valid. Processing template..."),
             (msg: String) => 
               throw new Exception(errorMsgs(detailsValidator).format(msg)))
         }
