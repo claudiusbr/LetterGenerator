@@ -13,6 +13,15 @@ Something wrong with changing the details file after one is entered and a filena
 - An exception is being thrown. Analyse what it is.
 
 
+Write a test for inputs with commas for DetailsFmtTester
+--------------------------------------------------------
+
+
+Write a test for the Wizard class
+---------------------------------
+- maybe also for all components of the renderer package.
+
+
 Refactor
 --------
 - Try to maker DocxGenerator smaller -- as shown by the test, it's still doing
