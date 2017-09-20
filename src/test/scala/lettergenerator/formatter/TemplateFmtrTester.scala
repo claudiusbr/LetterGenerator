@@ -23,7 +23,10 @@ class TemplateFmtrTester extends Tester {
       Then("it should retrieve and type cast the contents of the Input")
       Mockito.verify(mockInput,Mockito.times(1)).getContents()
       
-      And("it should contain and return an instance of Template with the Input's contents")
+      And("it should contain an instance of Template")
+      assert(templateFormatter.template.isInstanceOf[Template])
+
+      And("the instance of Template should contain the Input's contents")
       assert(templateFormatter.template.docPack == mockDocPack)
     }
   }

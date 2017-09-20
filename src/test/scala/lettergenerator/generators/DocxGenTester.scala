@@ -29,10 +29,12 @@ class DocGenTester extends Tester {
     
   describe("the generate method") {
     it("generates a docx") {
-      Given("a tuple of details as a JHashMap, a file name, and a template")
+      Given("a tuple of details as a JHashMap")
+      Given("a file name")
+      Given("a template")
       val fileName = "myFile"
 
-      When("the method is called with these as arguments")
+      When("they are passed as arguments to the method")
       docGen.generate(mockJMapDetails, fileName)(mockSaver, mockFormatter)
       
       Then("the template's original contents' variables should be replaced by the details")

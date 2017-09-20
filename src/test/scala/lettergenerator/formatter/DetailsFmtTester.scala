@@ -39,7 +39,7 @@ class DetailsFmtrTester extends Tester {
 
   describe("the details field") {
     it("should return a collection with the details file"){
-      
+      assert(false)
     }
   }
 }
