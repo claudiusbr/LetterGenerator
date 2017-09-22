@@ -4,8 +4,7 @@ A program to generate individually addressed letters.
 
 ### How it works
 This program takes a Docx template for a letter, a CSV file and a destination
-folder, and it generates individual letters based on the details of the details
-and template.
+folder, and it generates individual letters based on the details and template.
 
 The template should contain variable names in the `${name}` notation in its
 body, e.g.:
