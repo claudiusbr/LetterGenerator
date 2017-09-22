@@ -28,11 +28,19 @@ Quick Brown Fox,Lazy Dog,jumped over me,have me jump over you
 
 This should generate individual docx files with the contents replaced by those of the template. E.g.:
 ```
-Dear Six Fingered Man,		|	Dear Quick Brown Fox,
-							|
-My name is Inigo Montoya.	|	My name is Lazy Dog.
-You killed my father.		|	You jumped over me.
-Prepare to die.				|	Prepare to have me jump over you.
+Dear Six Fingered Man,
+
+My name is Inigo Montoya.
+You killed my father.
+Prepare to die.
+```
+
+```
+Dear Quick Brown Fox,
+
+My name is Lazy Dog.
+You jumped over me.
+Prepare to have me jump over you.
 ```
 
 
