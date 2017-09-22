@@ -16,10 +16,15 @@ Questions:
 
 Log:
 ----
+### 22/Sep/2017
+- write a nicer readme 
+  - done
+
 
 ### 15/Sep/2017
 - Test DocxMakerFormatter;
   - this actually already happened and I forgot to remove.
+
 
 ### 11/Sep/2017
 - fix red test for DocxMedTester.

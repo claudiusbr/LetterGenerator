@@ -3,7 +3,6 @@ TODOs
 
 Write a README and a user guide
 -------------------------------
-- write a nicer readme 
 - create a documentation folder
 - write step-by-step user guide
 
