@@ -21,7 +21,7 @@ class Wizard(medium: Interactor) extends MainFrame {
   private[renderer] val elementMaker = new ElementMaker()
   
   // to arrange the interface's elements
-  val elementOrganiser = new ElementOrganiser(this)
+  private val elementOrganiser = new ElementOrganiser(this)
   
   // for opening files and directories
   private val csvOpener, docxOpener, dirOpener = elementMaker.makeFileChooser()
@@ -68,7 +68,7 @@ class Wizard(medium: Interactor) extends MainFrame {
 
     reactions += { case ValueChanged(detailsText) => comboBoxRoutine() }
     
-    setPreferredExtensions()
+    setPreferredFileExtensions()
     
     elementOrganiser.organise()
   }
@@ -105,7 +105,7 @@ class Wizard(medium: Interactor) extends MainFrame {
     }
   }
   
-  def setPreferredExtensions(): Unit = {
+  def setPreferredFileExtensions(): Unit = {
     csvOpener.fileFilter = (new FileNameExtensionFilter("CSV (Comma Separated Values)","csv"))
     docxOpener.fileFilter = (new FileNameExtensionFilter("Word Document","docx"))
     dirOpener.fileSelectionMode = FileChooser.SelectionMode.DirectoriesOnly
