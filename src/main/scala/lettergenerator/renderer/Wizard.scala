@@ -1,8 +1,8 @@
 package lettergenerator
 package renderer
 
-import scala.swing.{MainFrame,Label,Dimension,CheckBox, TextField}
-import scala.swing.{Dialog,Component,ComboBox, FileChooser}
+import scala.swing.{MainFrame, Label, CheckBox, TextField}
+import scala.swing.{Dialog, ComboBox, FileChooser}
 
 import scala.swing.event.ValueChanged
 
@@ -15,8 +15,6 @@ import javax.swing.filechooser.FileNameExtensionFilter
  */
 class Wizard(medium: Interactor) extends MainFrame {
   
-  private val WindowWidth: Int = 710
-  private val WindowHeight: Int = 360
   private val TextWidth: Int = 56
 
   // to make the buttons, labels and textfields
@@ -59,11 +57,8 @@ class Wizard(medium: Interactor) extends MainFrame {
   
   private[renderer] val msg: Label = elementMaker.makeLabel("Ready")
   
-  setLayout()
-
-  private def setLayout(): Unit = {
-    title = "Letter Generator" 
-    preferredSize = new Dimension(WindowWidth,WindowHeight)
+  def setLayout(title: String): Unit = {
+    this.title = title
     
     fnAlsoInTemplate_.selected = false
     allowEmptyCels_.selected = true
@@ -72,10 +67,6 @@ class Wizard(medium: Interactor) extends MainFrame {
 
     reactions += { case ValueChanged(detailsText) => comboBoxRoutine() }
     
-    setMaxHeight(detailsText)
-    setMaxHeight(templateText)
-    setMaxHeight(destinationText)
-    setMaxHeight(fileNameColumn)
     setPreferredExtensions()
     
     elementOrganiser.organise()
@@ -91,9 +82,6 @@ class Wizard(medium: Interactor) extends MainFrame {
 
   def fnAlsoInTemplate: Boolean = fnAlsoInTemplate_.selected
 
-  private def setMaxHeight(comp: Component) = 
-    comp.maximumSize = new Dimension(Short.MaxValue, comp.preferredSize.height)
-  
   def submit(): Unit = medium.submit() 
   
   def detailsFile: String = detailsText.text

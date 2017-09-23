@@ -2,6 +2,8 @@ package lettergenerator
 
 object Runner extends App {
   val medium = new mediator.InteractionMediator()
-  medium.registerInterface(new renderer.Wizard(medium))
+  val wiz = new renderer.Wizard(medium)
+  wiz.setLayout("Letter Generator")
+  medium.registerInterface(wiz)
   medium.runInterface()
 }

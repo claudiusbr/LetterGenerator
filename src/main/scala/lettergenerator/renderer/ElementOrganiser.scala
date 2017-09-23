@@ -1,7 +1,7 @@
 package lettergenerator
 package renderer
 
-import scala.swing.{BoxPanel,Orientation,Swing}
+import scala.swing.{BoxPanel,Orientation,Swing, Component, Dimension}
 
 class ElementOrganiser(gui: Wizard) {
 
@@ -9,7 +9,18 @@ class ElementOrganiser(gui: Wizard) {
   private val VLargeGap: Int = 30
   private val HShortGap: Int = 3
 
+  private val WindowWidth: Int = 710
+  private val WindowHeight: Int = 360
+
   def organise(): Unit = {
+
+    gui.preferredSize = new Dimension(WindowWidth, WindowHeight)
+
+    setMaxHeight(gui.detailsText)
+    setMaxHeight(gui.templateText)
+    setMaxHeight(gui.destinationText)
+    setMaxHeight(gui.fileNameColumn)
+
     gui.contents = new BoxPanel(Orientation.Vertical) {
       contents += new BoxPanel(Orientation.Vertical) {
         contents += new BoxPanel(Orientation.Horizontal) {
@@ -89,4 +100,7 @@ class ElementOrganiser(gui: Wizard) {
       border = Swing.EmptyBorder(10, 10, 10, 10)
     }
   }
+  
+  private def setMaxHeight(comp: Component) = 
+    comp.maximumSize = new Dimension(Short.MaxValue, comp.preferredSize.height)
 }
