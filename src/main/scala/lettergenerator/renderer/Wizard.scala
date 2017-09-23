@@ -1,7 +1,7 @@
 package lettergenerator
 package renderer
 
-import scala.swing.{MainFrame,Label,Dimension,CheckBox}
+import scala.swing.{MainFrame,Label,Dimension,CheckBox, TextField}
 import scala.swing.{Dialog,Component,ComboBox, FileChooser}
 
 import scala.swing.event.ValueChanged
@@ -15,7 +15,7 @@ import javax.swing.filechooser.FileNameExtensionFilter
  */
 class Wizard(medium: Interactor) extends MainFrame {
   
-  private val WindowWidth: Int = 695
+  private val WindowWidth: Int = 710
   private val WindowHeight: Int = 360
   private val TextWidth: Int = 56
 

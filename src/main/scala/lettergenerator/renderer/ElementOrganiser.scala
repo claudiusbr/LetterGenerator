@@ -12,7 +12,10 @@ class ElementOrganiser(gui: Wizard) {
   def organise(): Unit = {
     gui.contents = new BoxPanel(Orientation.Vertical) {
       contents += new BoxPanel(Orientation.Vertical) {
-        contents += gui.detailsLabel
+        contents += new BoxPanel(Orientation.Horizontal) {
+          contents += gui.detailsLabel
+          contents += Swing.HGlue
+        }
         contents += Swing.VStrut(VShortGap)
         contents += new BoxPanel(Orientation.Horizontal) {
           contents += gui.detailsText
@@ -21,7 +24,10 @@ class ElementOrganiser(gui: Wizard) {
         }
         contents += Swing.VStrut(VShortGap)
         contents += new BoxPanel(Orientation.Vertical) {
-          contents += gui.fileNameLabel
+          contents += new BoxPanel(Orientation.Horizontal) {
+              contents += gui.fileNameLabel
+              contents += Swing.HGlue
+          }
           contents += Swing.VStrut(VShortGap)
           contents += new BoxPanel(Orientation.Horizontal) {
             contents += gui.fileNameColumn
@@ -33,7 +39,10 @@ class ElementOrganiser(gui: Wizard) {
 
       contents += Swing.VStrut(VLargeGap)
       contents += new BoxPanel(Orientation.Vertical) {
-       contents += gui.templateLabel
+       contents += new BoxPanel(Orientation.Horizontal) {
+         contents += gui.templateLabel
+         contents += Swing.HGlue
+       }
        contents += Swing.VStrut(VShortGap)
        contents += new BoxPanel(Orientation.Horizontal) {
          contents += gui.templateText
@@ -45,7 +54,10 @@ class ElementOrganiser(gui: Wizard) {
       contents += Swing.VStrut(VLargeGap)
 
       contents += new BoxPanel(Orientation.Vertical) {
-       contents += gui.destinationLabel
+       contents += new BoxPanel(Orientation.Horizontal) {
+         contents += gui.destinationLabel
+         contents += Swing.HGlue
+       }
        contents += Swing.VStrut(VShortGap)
        contents += new BoxPanel(Orientation.Horizontal) {
          contents += gui.destinationText
