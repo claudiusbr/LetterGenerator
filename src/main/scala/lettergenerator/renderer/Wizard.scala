@@ -45,8 +45,12 @@ class Wizard(medium: Interactor) extends MainFrame {
 
   // drop down box for file name column      
   private var textChangeFlag = detailsText.text
-  private[renderer] val fileNameColumn = elementMaker.makeComboBox()
   private[renderer] val fileNameLabel = elementMaker.makeLabel(" ") 
+  private[renderer] val fileNameColumn = elementMaker.makeComboBox()
+  
+  // check box to allow blank values (empty cells) in details file
+  private[renderer] val allowEmptyCels_ : CheckBox = 
+    elementMaker.makeCheckBox("Allow empty cells")
   
   // check box to check if file name is also present in template
   // as a variable to be replaced
@@ -62,6 +66,7 @@ class Wizard(medium: Interactor) extends MainFrame {
     preferredSize = new Dimension(WindowWidth,WindowHeight)
     
     fnAlsoInTemplate_.selected = false
+    allowEmptyCels_.selected = true
     
     listenTo(detailsText)
 
@@ -79,6 +84,8 @@ class Wizard(medium: Interactor) extends MainFrame {
   def message(text: String): Unit = msg.text = text
 
   def alert(text: String): Unit = Dialog.showMessage(this,text,"Alert")
+  
+  def allowEmptyCells: Boolean = allowEmptyCels_.selected
   
   def fNameColumn: String = fileNameColumn.selection.item
 

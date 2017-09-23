@@ -32,7 +32,11 @@ class ElementOrganiser(gui: Wizard) {
           contents += new BoxPanel(Orientation.Horizontal) {
             contents += gui.fileNameColumn
             contents += Swing.HStrut(HShortGap)
-            contents += gui.fnAlsoInTemplate_
+            contents += new BoxPanel(Orientation.Vertical) {
+              contents += gui.allowEmptyCels_
+              contents += Swing.VGlue
+              contents += gui.fnAlsoInTemplate_
+            }
           }
         }
       }

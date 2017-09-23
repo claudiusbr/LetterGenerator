@@ -6,8 +6,24 @@ import scala.language.implicitConversions
 /**
  * This class is responsible for validating the details file
  * @param headers an array containing the column headers of the details	file
+ * @param allowEmpty a boolean which indicates if validation should include
+ * 		checking for empty cells
  */
-case class DetailsValidator(headers: Array[String]) extends RecursiveValidator {
+case class DetailsValidator(headers: Array[String], allowEmpty: Boolean) 
+  extends RecursiveValidator {
+
+  val emptyValidator = new EmptyDetailsValidator(headers)
+  
+  override def validate(what: Any): Boolean = {
+    if (!allowEmpty) {
+      emptyValidator.validate(what)
+    } else {
+      true
+    }
+  }
+}
+
+sealed case class EmptyDetailsValidator(headers: Array[String]) extends RecursiveValidator {
   import Converters.anyToDetMap  
 
   override def validate(what: Any): Boolean = validateDetailsNotEmpty(what)

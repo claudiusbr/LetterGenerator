@@ -42,7 +42,7 @@ class ValidationMediator(gui: renderer.Wizard) {
   } 
   
   def validateDetails(details: Details)(detailsValidator: RecursiveValidator = new 
-    DetailsValidator(details.headers)): Unit = {
+    DetailsValidator(details.headers, gui.allowEmptyCells)): Unit = {
       try {
         for (map <- details.tuples) {
           detailsValidator.applyRecursion[Map[String,String]](
