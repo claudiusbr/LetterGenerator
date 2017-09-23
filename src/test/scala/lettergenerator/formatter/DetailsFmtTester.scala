@@ -23,8 +23,8 @@ class DetailsFmtrTester extends Tester {
       .toIterator
       
 
-  describe("the headers field") {
-    it("should return the column names of the details file") {
+  describe("the constructor") {
+    it("should build an instance with the correct fields") {
       Given("a valid Input file")
       doReturn(detailsFileContents).when(mockInput).getContents()
       
@@ -33,13 +33,33 @@ class DetailsFmtrTester extends Tester {
       
       Then("the headers field should return all the column names as an array")
       assert(testObjects.headers.deep == detailsFmtr.headers.deep)
+      
+      And("the details field should return a collection of the contents of the csv")
+      assert(testObjects.tuples == detailsFmtr.details)
 
     }
-  }
-
-  describe("the details field") {
-    it("should return a collection with the details file"){
-      assert(false)
+    
+    it("sould build a correct instance for details with comma") {
+      Given("an input file from a CSV with commas in its 'cells'")
+      doReturn(detailsFileContentsWithComma).when(mockInput).getContents()
+      
+      When("the formatter is instantiated")
+      val detailsFmtr = new DetailsFormatter(mockInput)
+      
+      Then("the headers field should instantiate as normal")
+      assert(testObjects.headers.deep == detailsFmtr.headers.deep)
+      
+      And("the details field should return a valid collection")
+      val detailsForTest: List[Map[String,String]] = List(
+        Map("name" -> "The Quick Brown Fox",
+            "action" -> "Jumped Over The Lazy Dog, on a Sunday",
+            "consequence" -> "earned +35XP" ),
+            
+        Map("name" -> "The Lazy Dog",
+            "action" -> "Was Jumped Over By The Quick Brown Fox, on a Sunday",
+            "consequence" -> "Had To Re-evaluate His Life Choices")
+      )
+      assert(detailsForTest == detailsFmtr.details)
     }
   }
 }
