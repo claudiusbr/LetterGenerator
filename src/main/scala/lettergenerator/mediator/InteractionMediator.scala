@@ -31,10 +31,17 @@ class InteractionMediator extends renderer.Interactor {
   def runInterface(): Unit = gui.visible = true
   
   def detailsFileHeaders(): List[String] = {
-    val allowEmptyFileName = List(" ")
-    allowEmptyFileName ++ new DetailsFormatter(CsvInput(validator
-      .validatePathOrThrow(("details file",gui.detailsFile))))
-        .details.head.keySet.toList
+
+    val choiceForNoFileNameColumn = List(" ")
+
+    if (!gui.detailsFile.isEmpty()) {
+      choiceForNoFileNameColumn ++ new DetailsFormatter(CsvInput(validator
+        .validatePathOrThrow(("details file",gui.detailsFile))))
+          .details.head.keySet.toList
+    } else {
+      choiceForNoFileNameColumn 
+    }
+
   }
   
   def submit(): Unit = {

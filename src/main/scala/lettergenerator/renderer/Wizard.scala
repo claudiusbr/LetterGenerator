@@ -42,7 +42,8 @@ class Wizard(medium: Interactor) extends MainFrame {
       + "folder for the letters", dirOpener, TextWidth)
 
   // drop down box for file name column      
-  private var textChangeFlag = detailsText.text
+  private var textChangeFlag: String = detailsText.text
+
   private[renderer] val fileNameLabel = elementMaker.makeLabel(" ") 
   private[renderer] val fileNameColumn = elementMaker.makeComboBox()
   
@@ -89,16 +90,18 @@ class Wizard(medium: Interactor) extends MainFrame {
   def destinationFolder: String = destinationText.text
   
   private def comboBoxRoutine(): Unit = {
-    if (detailsText.text != textChangeFlag) {
+    if (detailsFile != textChangeFlag) {
+
       fileNameColumn.peer.setModel(
           ComboBox.newConstantModel(
               medium.detailsFileHeaders()))
-      textChangeFlag = detailsText.text
+      textChangeFlag = detailsFile
       fileNameColumn.selection.item = ""
       
       if (fileNameColumn.peer.getModel.getSize > 1) 
         fileNameLabel.text = "Please select the column which contains "+
           "the file names for the new documents"
+      else fileNameLabel.text = ""
     }
   }
   

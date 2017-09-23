@@ -1,37 +1,16 @@
 TODOs
 =====
 
-Write a README and a user guide
+Write a user guide
 -------------------------------
 - create a documentation folder
 - write step-by-step user guide
 
 
-Something wrong with changing the details file after one is entered and a filename column is chosen
----------------------------------------------------------------------------------------------------
-- An exception is being thrown. Analyse what it is.
-
-
-Write a test for inputs with commas for DetailsFmtTester
---------------------------------------------------------
-
-
-Write a test for the Wizard class
----------------------------------
-- maybe also for all components of the renderer package.
-
-
-Refactor
---------
-- Try to maker DocxGenerator smaller -- as shown by the test, it's still doing
-  too much.
-- make a branch where all the packages are organised in a more modular rather
-  than layered fashion, e.g. all Template Docx entities together, then all the
-  Details/Csv, then one for all the hybrid stuff.
-
-
 Test Scenarios
 --------------
+- Write a test for the Wizard class
+  - maybe also for entities in renderer package
 - Test what would happen if the user provided only one column and a template
   with no variables
   - e.g., someone decides to use the generator to just create the exact same
@@ -42,6 +21,13 @@ Test Scenarios
 - Test ValidationMediator's duplicate file checker method;
 
 
+Refactor
+--------
+- make a branch where all the packages are organised in a more modular rather
+  than layered fashion, e.g. all Template Docx entities together, then all the
+  Details/Csv, then one for all the hybrid stuff.
+
+
 Check if the effort of saving the JaxbElement within draftSaveReset is really necessary
 ---------------------------------------------------------------------------------------
 - actually, see
@@ -50,7 +36,7 @@ Check if the effort of saving the JaxbElement within draftSaveReset is really ne
   whenever you can.
 
 
-Validate "empty File name column" + "'File name also in template' box ticked" on submit
+Crash when "empty File name column" + "'File name also in template' box ticked" on submit
 ---------------------------------------------------------------------------------------
 - this should not be allowed to happen
 
@@ -65,11 +51,6 @@ Find a way to extract only the first line of the details file without loading th
 create a web interface
 ----------------------
 - either as part of or as a subproject
-
-
-give user option of allowing empty cells in columns
----------------------------------------------------
-- checkbox allowing details.csv cells to contain empty values.
 
 
 redirect output of docx4j and dependencies

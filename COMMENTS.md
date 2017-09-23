@@ -16,6 +16,31 @@ Questions:
 
 Log:
 ----
+
+### 23/Sep/2017
+#### Something wrong with changing the details file after one is entered and a filename column is chosen
+- An exception is being thrown. Analyse what it is.
+  - turns out the exception was happening because whenever a new details file
+    is chosen, before the text in the textfield changed to the path of the new
+    file, it would change to empty. This caused the `detailsFileHeaders` method
+    of `InteractionMediator` to be called with an empty file path, and caused
+    it to crash before the new one could be loaded. I have added a guard
+    condition for this now, so the method should be working.
+
+#### Write a test for inputs with commas for DetailsFmtTester
+- oh yea, I've also done this one.
+
+#### Try to maker DocxGenerator smaller -- as shown by the test, it's still doing too much.
+- I think I'm ok with it for now.
+
+#### give user option of allowing empty cells in columns
+- checkbox allowing details.csv cells to contain empty values.
+  - did this earlier, forgot to remove the TODO on previous commit
+
+
+
+
+
 ### 22/Sep/2017
 - write a nicer readme 
   - done
