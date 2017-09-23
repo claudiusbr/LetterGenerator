@@ -27,8 +27,8 @@ class DocxMakerFormatter {
     detailsTuple.collectFirst({
       case (column: String, value: String) if column == fileNameColumn => value
     }) match {
-      case Some(file) => file
-      case None => "Output"
+      case Some(file) if !file.isEmpty() => file
+      case _ => "Output"
     }
 
   }
