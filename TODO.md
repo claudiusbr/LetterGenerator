@@ -1,6 +1,13 @@
 TODOs
 =====
 
+Refactor
+--------
+- Make a 'parent folder' path which will be shared by the details, template and
+  destination 'Open' buttons so that when you choose one the other will open in
+  the same folder, rather than in the root folder.
+
+
 Write a user guide
 -------------------------------
 - create a documentation folder
@@ -19,13 +26,6 @@ Test Scenarios
     from the list, therefore giving it an empty list?
 - Test if user input can take special characters
 - Test ValidationMediator's duplicate file checker method;
-
-
-Refactor
---------
-- make a branch where all the packages are organised in a more modular rather
-  than layered fashion, e.g. all Template Docx entities together, then all the
-  Details/Csv, then one for all the hybrid stuff.
 
 
 Check if the effort of saving the JaxbElement within draftSaveReset is really necessary

@@ -17,6 +17,14 @@ Questions:
 Log:
 ----
 
+### 25/Sep/2017
+- make a branch where all the packages are organised in a more modular rather
+  than layered fashion, e.g. all Template Docx entities together, then all the
+  Details/Csv, then one for all the hybrid stuff.
+  - actually I will leave this for now.
+
+
+
 ### 23/Sep/2017
 #### Something wrong with changing the details file after one is entered and a filename column is chosen
 - An exception is being thrown. Analyse what it is.
