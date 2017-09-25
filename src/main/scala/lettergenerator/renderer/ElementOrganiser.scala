@@ -10,7 +10,7 @@ class ElementOrganiser(gui: Wizard) {
   private val HShortGap: Int = 3
 
   private val WindowWidth: Int = 710
-  private val WindowHeight: Int = 360
+  private val WindowHeight: Int = 390
 
   def organise(): Unit = {
 
